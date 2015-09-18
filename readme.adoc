@@ -22,7 +22,7 @@ The more advanced usages however tend to show that using both is quite smart and
 
 CAUTION: Sadly, performance aspect of the comparison, as requiring much more work (and stricter) was left out from this work. All work was done on single-node cluster.
 
-Project:: Methods and Systems of Great-Scale Computation (Polish: Metody i Systemy Obliczeń Wielkiej Skali, MISOWS)
+Project:: Methods and Systems of Large-scale Computing (Polish: Metody i Systemy Obliczeń Wielkiej Skali, MISOWS)
 Lead by:: http://www.icsr.agh.edu.pl/~malawski/[dr Maciej Malawski]
 Author:: Tomasz.Borek@gmail.com, https://twitter.com/LAFK_pl/[@LAFK_pl]
 ****
@@ -1272,7 +1272,7 @@ IMPORTANT: The more advanced usages however tend to show that using both is quit
 
 CAUTION: Sadly, performance aspect of the comparison, as requiring much more work (and stricter) was left out from this work. All work was done on single-node cluster.
 
-Project:: Methods and Systems of Great-Scale Computation (Polish: Metody i Systemy Obliczeń Wielkiej Skali, MISOWS)
+Project:: Methods and Systems of Large-scale Computing (Polish: Metody i Systemy Obliczeń Wielkiej Skali, MISOWS)
 Lead by:: http://www.icsr.agh.edu.pl/~malawski/[dr Maciej Malawski]
 Author:: Tomasz.Borek@gmail.com, https://twitter.com/LAFK_pl/[@LAFK_pl]
 ****
