@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Asciidoctor 0.1.4">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pig vs Hive</title>
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
+audio, canvas, video { display: inline-block; }
+audio:not([controls]) { display: none; height: 0; }
+[hidden] { display: none; }
+html { background: #fff; color: #000; font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+a:focus { outline: thin dotted; }
+a:active, a:hover { outline: 0; }
+h1 { font-size: 2em; margin: 0.67em 0; }
+abbr[title] { border-bottom: 1px dotted; }
+b, strong { font-weight: bold; }
+dfn { font-style: italic; }
+hr { -moz-box-sizing: content-box; box-sizing: content-box; height: 0; }
+mark { background: #ff0; color: #000; }
+code, kbd, pre, samp { font-family: monospace, serif; font-size: 1em; }
+pre { white-space: pre-wrap; }
+q { quotes: "\201C" "\201D" "\2018" "\2019"; }
+small { font-size: 80%; }
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+img { border: 0; }
+svg:not(:root) { overflow: hidden; }
+figure { margin: 0; }
+fieldset { border: 1px solid #c0c0c0; margin: 0 2px; padding: 0.35em 0.625em 0.75em; }
+legend { border: 0; padding: 0; }
+button, input, select, textarea { font-family: inherit; font-size: 100%; margin: 0; }
+button, input { line-height: normal; }
+button, select { text-transform: none; }
+button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
+button[disabled], html input[disabled] { cursor: default; }
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+textarea { overflow: auto; vertical-align: top; }
+table { border-collapse: collapse; border-spacing: 0; }
+*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+html, body { font-size: 100%; }
+body { background: white; color: #222222; padding: 0; margin: 0; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; line-height: 1; position: relative; cursor: auto; }
+a:hover { cursor: pointer; }
+a:focus { outline: none; }
+img, object, embed { max-width: 100%; height: auto; }
+object, embed { height: 100%; }
+img { -ms-interpolation-mode: bicubic; }
+#map_canvas img, #map_canvas embed, #map_canvas object, .map_canvas img, .map_canvas embed, .map_canvas object { max-width: none !important; }
+.left { float: left !important; }
+.right { float: right !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-center { text-align: center !important; }
+.text-justify { text-align: justify !important; }
+.hide { display: none; }
+.antialiased, body { -webkit-font-smoothing: antialiased; }
+img { display: inline-block; vertical-align: middle; }
+textarea { height: auto; min-height: 50px; }
+select { width: 100%; }
+p.lead, .paragraph.lead > p, #preamble > .sectionbody > .paragraph:first-of-type p { font-size: 1.21875em; line-height: 1.6; }
+.subheader, #content #toctitle, .admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title, .tableblock > caption { line-height: 1.4; color: #7a2518; font-weight: 300; margin-top: 0.2em; margin-bottom: 0.5em; }
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6, pre, form, p, blockquote, th, td { margin: 0; padding: 0; direction: ltr; }
+a { color: #005498; text-decoration: underline; line-height: inherit; }
+a:hover, a:focus { color: #00467f; }
+a img { border: none; }
+p { font-family: inherit; font-weight: normal; font-size: 1em; line-height: 1.6; margin-bottom: 1.25em; text-rendering: optimizeLegibility; }
+p aside { font-size: 0.875em; line-height: 1.35; font-style: italic; }
+h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { font-family: Georgia, "URW Bookman L", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; color: #ba3925; text-rendering: optimizeLegibility; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.2125em; }
+h1 small, h2 small, h3 small, #toctitle small, .sidebarblock > .content > .title small, h4 small, h5 small, h6 small { font-size: 60%; color: #e99b8f; line-height: 0; }
+h1 { font-size: 2.125em; }
+h2 { font-size: 1.6875em; }
+h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.375em; }
+h4 { font-size: 1.125em; }
+h5 { font-size: 1.125em; }
+h6 { font-size: 1em; }
+hr { border: solid #dddddd; border-width: 1px 0 0; clear: both; margin: 1.25em 0 1.1875em; height: 0; }
+em, i { font-style: italic; line-height: inherit; }
+strong, b { font-weight: bold; line-height: inherit; }
+small { font-size: 60%; line-height: inherit; }
+code { font-family: Consolas, "Liberation Mono", Courier, monospace; font-weight: normal; color: #6d180b; }
+ul, ol, dl { font-size: 1em; line-height: 1.6; margin-bottom: 1.25em; list-style-position: outside; font-family: inherit; }
+ul, ol { margin-left: 1.5em; }
+ul li ul, ul li ol { margin-left: 1.25em; margin-bottom: 0; font-size: 1em; }
+ul.square li ul, ul.circle li ul, ul.disc li ul { list-style: inherit; }
+ul.square { list-style-type: square; }
+ul.circle { list-style-type: circle; }
+ul.disc { list-style-type: disc; }
+ul.no-bullet { list-style: none; }
+ol li ul, ol li ol { margin-left: 1.25em; margin-bottom: 0; }
+dl dt { margin-bottom: 0.3125em; font-weight: bold; }
+dl dd { margin-bottom: 1.25em; }
+abbr, acronym { text-transform: uppercase; font-size: 90%; color: #222222; border-bottom: 1px dotted #dddddd; cursor: help; }
+abbr { text-transform: none; }
+blockquote { margin: 0 0 1.25em; padding: 0.5625em 1.25em 0 1.1875em; border-left: 1px solid #dddddd; }
+blockquote cite { display: block; font-size: inherit; color: #555555; }
+blockquote cite:before { content: "\2014 \0020"; }
+blockquote cite a, blockquote cite a:visited { color: #555555; }
+blockquote, blockquote p { line-height: 1.6; color: #6f6f6f; }
+.vcard { display: inline-block; margin: 0 0 1.25em 0; border: 1px solid #dddddd; padding: 0.625em 0.75em; }
+.vcard li { margin: 0; display: block; }
+.vcard .fn { font-weight: bold; font-size: 0.9375em; }
+.vevent .summary { font-weight: bold; }
+.vevent abbr { cursor: auto; text-decoration: none; font-weight: bold; border: none; padding: 0 0.0625em; }
+@media only screen and (min-width: 768px) { h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { line-height: 1.4; }
+  h1 { font-size: 2.75em; }
+  h2 { font-size: 2.3125em; }
+  h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.6875em; }
+  h4 { font-size: 1.4375em; } }
+.print-only { display: none !important; }
+@media print { * { background: transparent !important; color: #000 !important; box-shadow: none !important; text-shadow: none !important; }
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3, #toctitle, .sidebarblock > .content > .title { orphans: 3; widows: 3; }
+  h2, h3, #toctitle, .sidebarblock > .content > .title { page-break-after: avoid; }
+  .hide-on-print { display: none !important; }
+  .print-only { display: block !important; }
+  .hide-for-print { display: none !important; }
+  .show-for-print { display: inherit !important; } }
+table { background: white; margin-bottom: 1.25em; border: solid 1px #dddddd; }
+table thead, table tfoot { background: whitesmoke; font-weight: bold; }
+table thead tr th, table thead tr td, table tfoot tr th, table tfoot tr td { padding: 0.5em 0.625em 0.625em; font-size: inherit; color: #222222; text-align: left; }
+table tr th, table tr td { padding: 0.5625em 0.625em; font-size: inherit; color: #222222; }
+table tr.even, table tr.alt, table tr:nth-of-type(even) { background: #f9f9f9; }
+table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoot tr td { display: table-cell; line-height: 1.6; }
+.clearfix:before, .clearfix:after, .float-group:before, .float-group:after { content: " "; display: table; }
+.clearfix:after, .float-group:after { clear: both; }
+*:not(pre) > code { font-size: 0.9375em; padding: 1px 3px 0; white-space: nowrap; background-color: #f2f2f2; border: 1px solid #cccccc; -webkit-border-radius: 4px; border-radius: 4px; text-shadow: none; }
+pre, pre > code { line-height: 1.4; color: inherit; font-family: Consolas, "Liberation Mono", Courier, monospace; font-weight: normal; }
+kbd.keyseq { color: #555555; }
+kbd:not(.keyseq) { display: inline-block; color: #222222; font-size: 0.75em; line-height: 1.4; background-color: #F7F7F7; border: 1px solid #ccc; -webkit-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; margin: -0.15em 0.15em 0 0.15em; padding: 0.2em 0.6em 0.2em 0.5em; vertical-align: middle; white-space: nowrap; }
+kbd kbd:first-child { margin-left: 0; }
+kbd kbd:last-child { margin-right: 0; }
+.menuseq, .menu { color: #090909; }
+p a > code:hover { color: #561309; }
+#header, #content, #footnotes, #footer { width: 100%; margin-left: auto; margin-right: auto; margin-top: 0; margin-bottom: 0; max-width: 62.5em; *zoom: 1; position: relative; padding-left: 0.9375em; padding-right: 0.9375em; }
+#header:before, #header:after, #content:before, #content:after, #footnotes:before, #footnotes:after, #footer:before, #footer:after { content: " "; display: table; }
+#header:after, #content:after, #footnotes:after, #footer:after { clear: both; }
+#header { margin-bottom: 2.5em; }
+#header > h1 { color: black; font-weight: normal; border-bottom: 1px solid #dddddd; margin-bottom: -28px; padding-bottom: 32px; }
+#header span { color: #6f6f6f; }
+#header #revnumber { text-transform: capitalize; }
+#header br { display: none; }
+#header br + span { padding-left: 3px; }
+#header br + span:before { content: "\2013 \0020"; }
+#header br + span.author { padding-left: 0; }
+#header br + span.author:before { content: ", "; }
+#toc { border-bottom: 3px double #ebebeb; padding-bottom: 1.25em; }
+#toc > ul { margin-left: 0.25em; }
+#toc ul.sectlevel0 > li > a { font-style: italic; }
+#toc ul.sectlevel0 ul.sectlevel1 { margin-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
+#toc ul { list-style-type: none; }
+#toctitle { color: #7a2518; }
+@media only screen and (min-width: 1280px) { body.toc2 { padding-left: 20em; }
+  #toc.toc2 { position: fixed; width: 20em; left: 0; top: 0; border-right: 1px solid #ebebeb; border-bottom: 0; z-index: 1000; padding: 1em; height: 100%; overflow: auto; }
+  #toc.toc2 #toctitle { margin-top: 0; }
+  #toc.toc2 > ul { font-size: .95em; }
+  #toc.toc2 ul ul { margin-left: 0; padding-left: 1.25em; }
+  #toc.toc2 ul.sectlevel0 ul.sectlevel1 { padding-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
+  body.toc2.toc-right { padding-left: 0; padding-right: 20em; }
+  body.toc2.toc-right #toc.toc2 { border-right: 0; border-left: 1px solid #ebebeb; left: auto; right: 0; } }
+#content #toc { border-style: solid; border-width: 1px; border-color: #d9d9d9; margin-bottom: 1.25em; padding: 1.25em; background: #f2f2f2; border-width: 0; -webkit-border-radius: 4px; border-radius: 4px; }
+#content #toc > :first-child { margin-top: 0; }
+#content #toc > :last-child { margin-bottom: 0; }
+#content #toc a { text-decoration: none; }
+#content #toctitle { font-weight: bold; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-size: 1em; padding-left: 0.125em; }
+#footer { max-width: 100%; background-color: #222222; padding: 1.25em; }
+#footer-text { color: #dddddd; line-height: 1.44; }
+.sect1 { padding-bottom: 1.25em; }
+.sect1 + .sect1 { border-top: 3px double #ebebeb; }
+#content h1 > a.anchor, h2 > a.anchor, h3 > a.anchor, #toctitle > a.anchor, .sidebarblock > .content > .title > a.anchor, h4 > a.anchor, h5 > a.anchor, h6 > a.anchor { position: absolute; width: 1em; margin-left: -1em; display: block; text-decoration: none; visibility: hidden; text-align: center; font-weight: normal; }
+#content h1 > a.anchor:before, h2 > a.anchor:before, h3 > a.anchor:before, #toctitle > a.anchor:before, .sidebarblock > .content > .title > a.anchor:before, h4 > a.anchor:before, h5 > a.anchor:before, h6 > a.anchor:before { content: '\00A7'; font-size: .85em; vertical-align: text-top; display: block; margin-top: 0.05em; }
+#content h1:hover > a.anchor, #content h1 > a.anchor:hover, h2:hover > a.anchor, h2 > a.anchor:hover, h3:hover > a.anchor, #toctitle:hover > a.anchor, .sidebarblock > .content > .title:hover > a.anchor, h3 > a.anchor:hover, #toctitle > a.anchor:hover, .sidebarblock > .content > .title > a.anchor:hover, h4:hover > a.anchor, h4 > a.anchor:hover, h5:hover > a.anchor, h5 > a.anchor:hover, h6:hover > a.anchor, h6 > a.anchor:hover { visibility: visible; }
+#content h1 > a.link, h2 > a.link, h3 > a.link, #toctitle > a.link, .sidebarblock > .content > .title > a.link, h4 > a.link, h5 > a.link, h6 > a.link { color: #ba3925; text-decoration: none; }
+#content h1 > a.link:hover, h2 > a.link:hover, h3 > a.link:hover, #toctitle > a.link:hover, .sidebarblock > .content > .title > a.link:hover, h4 > a.link:hover, h5 > a.link:hover, h6 > a.link:hover { color: #a53221; }
+.imageblock, .literalblock, .listingblock, .verseblock, .videoblock { margin-bottom: 1.25em; }
+.admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-align: left; font-weight: bold; }
+.tableblock > caption { text-align: left; font-weight: bold; white-space: nowrap; overflow: visible; max-width: 0; }
+table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p { font-size: inherit; }
+.admonitionblock > table { border: 0; background: none; width: 100%; }
+.admonitionblock > table td.icon { text-align: center; width: 80px; }
+.admonitionblock > table td.icon img { max-width: none; }
+.admonitionblock > table td.icon .title { font-weight: bold; text-transform: uppercase; }
+.admonitionblock > table td.content { padding-left: 1.125em; padding-right: 1.25em; border-left: 1px solid #dddddd; color: #6f6f6f; }
+.admonitionblock > table td.content > :last-child > :last-child { margin-bottom: 0; }
+.exampleblock > .content { border-style: solid; border-width: 1px; border-color: #e6e6e6; margin-bottom: 1.25em; padding: 1.25em; background: white; -webkit-border-radius: 4px; border-radius: 4px; }
+.exampleblock > .content > :first-child { margin-top: 0; }
+.exampleblock > .content > :last-child { margin-bottom: 0; }
+.exampleblock > .content h1, .exampleblock > .content h2, .exampleblock > .content h3, .exampleblock > .content #toctitle, .sidebarblock.exampleblock > .content > .title, .exampleblock > .content h4, .exampleblock > .content h5, .exampleblock > .content h6, .exampleblock > .content p { color: #333333; }
+.exampleblock > .content h1, .exampleblock > .content h2, .exampleblock > .content h3, .exampleblock > .content #toctitle, .sidebarblock.exampleblock > .content > .title, .exampleblock > .content h4, .exampleblock > .content h5, .exampleblock > .content h6 { line-height: 1; margin-bottom: 0.625em; }
+.exampleblock > .content h1.subheader, .exampleblock > .content h2.subheader, .exampleblock > .content h3.subheader, .exampleblock > .content .subheader#toctitle, .sidebarblock.exampleblock > .content > .subheader.title, .exampleblock > .content h4.subheader, .exampleblock > .content h5.subheader, .exampleblock > .content h6.subheader { line-height: 1.4; }
+.exampleblock.result > .content { -webkit-box-shadow: 0 1px 8px #d9d9d9; box-shadow: 0 1px 8px #d9d9d9; }
+.sidebarblock { border-style: solid; border-width: 1px; border-color: #d9d9d9; margin-bottom: 1.25em; padding: 1.25em; background: #f2f2f2; -webkit-border-radius: 4px; border-radius: 4px; }
+.sidebarblock > :first-child { margin-top: 0; }
+.sidebarblock > :last-child { margin-bottom: 0; }
+.sidebarblock h1, .sidebarblock h2, .sidebarblock h3, .sidebarblock #toctitle, .sidebarblock > .content > .title, .sidebarblock h4, .sidebarblock h5, .sidebarblock h6, .sidebarblock p { color: #333333; }
+.sidebarblock h1, .sidebarblock h2, .sidebarblock h3, .sidebarblock #toctitle, .sidebarblock > .content > .title, .sidebarblock h4, .sidebarblock h5, .sidebarblock h6 { line-height: 1; margin-bottom: 0.625em; }
+.sidebarblock h1.subheader, .sidebarblock h2.subheader, .sidebarblock h3.subheader, .sidebarblock .subheader#toctitle, .sidebarblock > .content > .subheader.title, .sidebarblock h4.subheader, .sidebarblock h5.subheader, .sidebarblock h6.subheader { line-height: 1.4; }
+.sidebarblock > .content > .title { color: #7a2518; margin-top: 0; line-height: 1.6; }
+.exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child, .sidebarblock > .content > :last-child > :last-child, .sidebarblock > .content .olist > ol > li:last-child > :last-child, .sidebarblock > .content .ulist > ul > li:last-child > :last-child, .sidebarblock > .content .qlist > ol > li:last-child > :last-child { margin-bottom: 0; }
+.literalblock > .content pre, .listingblock > .content pre { background: none; border-width: 1px 0; border-style: dotted; border-color: #bfbfbf; -webkit-border-radius: 4px; border-radius: 4px; padding: 0.75em 0.75em 0.5em 0.75em; word-wrap: break-word; }
+.literalblock > .content pre.nowrap, .listingblock > .content pre.nowrap { overflow-x: auto; white-space: pre; word-wrap: normal; }
+.literalblock > .content pre > code, .listingblock > .content pre > code { display: block; }
+@media only screen { .literalblock > .content pre, .listingblock > .content pre { font-size: 0.8em; } }
+@media only screen and (min-width: 768px) { .literalblock > .content pre, .listingblock > .content pre { font-size: 0.9em; } }
+@media only screen and (min-width: 1280px) { .literalblock > .content pre, .listingblock > .content pre { font-size: 1em; } }
+.listingblock > .content { position: relative; }
+.listingblock:hover code[class*=" language-"]:before { text-transform: uppercase; font-size: 0.9em; color: #999; position: absolute; top: 0.375em; right: 0.375em; }
+.listingblock:hover code.asciidoc:before { content: "asciidoc"; }
+.listingblock:hover code.clojure:before { content: "clojure"; }
+.listingblock:hover code.css:before { content: "css"; }
+.listingblock:hover code.groovy:before { content: "groovy"; }
+.listingblock:hover code.html:before { content: "html"; }
+.listingblock:hover code.java:before { content: "java"; }
+.listingblock:hover code.javascript:before { content: "javascript"; }
+.listingblock:hover code.python:before { content: "python"; }
+.listingblock:hover code.ruby:before { content: "ruby"; }
+.listingblock:hover code.scss:before { content: "scss"; }
+.listingblock:hover code.xml:before { content: "xml"; }
+.listingblock:hover code.yaml:before { content: "yaml"; }
+.listingblock.terminal pre .command:before { content: attr(data-prompt); padding-right: 0.5em; color: #999; }
+.listingblock.terminal pre .command:not([data-prompt]):before { content: '$'; }
+table.pyhltable { border: 0; margin-bottom: 0; }
+table.pyhltable td { vertical-align: top; padding-top: 0; padding-bottom: 0; }
+table.pyhltable td.code { padding-left: .75em; padding-right: 0; }
+.highlight.pygments .lineno, table.pyhltable td:not(.code) { color: #999; padding-left: 0; padding-right: .5em; border-right: 1px solid #dddddd; }
+.highlight.pygments .lineno { display: inline-block; margin-right: .25em; }
+table.pyhltable .linenodiv { background-color: transparent !important; padding-right: 0 !important; }
+.quoteblock { margin: 0 0 1.25em; padding: 0.5625em 1.25em 0 1.1875em; border-left: 1px solid #dddddd; }
+.quoteblock blockquote { margin: 0 0 1.25em 0; padding: 0 0 0.5625em 0; border: 0; }
+.quoteblock blockquote > .paragraph:last-child p { margin-bottom: 0; }
+.quoteblock .attribution { margin-top: -.25em; padding-bottom: 0.5625em; font-size: inherit; color: #555555; }
+.quoteblock .attribution br { display: none; }
+.quoteblock .attribution cite { display: block; margin-bottom: 0.625em; }
+table thead th, table tfoot th { font-weight: bold; }
+table.tableblock.grid-all { border-collapse: separate; border-spacing: 1px; -webkit-border-radius: 4px; border-radius: 4px; border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd; }
+table.tableblock.frame-topbot, table.tableblock.frame-none { border-left: 0; border-right: 0; }
+table.tableblock.frame-sides, table.tableblock.frame-none { border-top: 0; border-bottom: 0; }
+table.tableblock td .paragraph:last-child p, table.tableblock td > p:last-child { margin-bottom: 0; }
+th.tableblock.halign-left, td.tableblock.halign-left { text-align: left; }
+th.tableblock.halign-right, td.tableblock.halign-right { text-align: right; }
+th.tableblock.halign-center, td.tableblock.halign-center { text-align: center; }
+th.tableblock.valign-top, td.tableblock.valign-top { vertical-align: top; }
+th.tableblock.valign-bottom, td.tableblock.valign-bottom { vertical-align: bottom; }
+th.tableblock.valign-middle, td.tableblock.valign-middle { vertical-align: middle; }
+p.tableblock.header { color: #222222; font-weight: bold; }
+td > div.verse { white-space: pre; }
+ol { margin-left: 1.75em; }
+ul li ol { margin-left: 1.5em; }
+dl dd { margin-left: 1.125em; }
+dl dd:last-child, dl dd:last-child > :last-child { margin-bottom: 0; }
+ol > li p, ul > li p, ul dd, ol dd, .olist .olist, .ulist .ulist, .ulist .olist, .olist .ulist { margin-bottom: 0.625em; }
+ul.unstyled, ol.unnumbered, ul.checklist, ul.none { list-style-type: none; }
+ul.unstyled, ol.unnumbered, ul.checklist { margin-left: 0.625em; }
+ul.checklist li > p:first-child > i[class^="icon-check"]:first-child, ul.checklist li > p:first-child > input[type="checkbox"]:first-child { margin-right: 0.25em; }
+ul.checklist li > p:first-child > input[type="checkbox"]:first-child { position: relative; top: 1px; }
+ul.inline { margin: 0 auto 0.625em auto; margin-left: -1.375em; margin-right: 0; padding: 0; list-style: none; overflow: hidden; }
+ul.inline > li { list-style: none; float: left; margin-left: 1.375em; display: block; }
+ul.inline > li > * { display: block; }
+.unstyled dl dt { font-weight: normal; font-style: normal; }
+ol.arabic { list-style-type: decimal; }
+ol.decimal { list-style-type: decimal-leading-zero; }
+ol.loweralpha { list-style-type: lower-alpha; }
+ol.upperalpha { list-style-type: upper-alpha; }
+ol.lowerroman { list-style-type: lower-roman; }
+ol.upperroman { list-style-type: upper-roman; }
+ol.lowergreek { list-style-type: lower-greek; }
+.hdlist > table, .colist > table { border: 0; background: none; }
+.hdlist > table > tbody > tr, .colist > table > tbody > tr { background: none; }
+td.hdlist1 { padding-right: .8em; font-weight: bold; }
+td.hdlist1, td.hdlist2 { vertical-align: top; }
+.literalblock + .colist, .listingblock + .colist { margin-top: -0.5em; }
+.colist > table tr > td:first-of-type { padding: 0 .8em; line-height: 1; }
+.colist > table tr > td:last-of-type { padding: 0.25em 0; }
+.qanda > ol > li > p > em:only-child { color: #00467f; }
+.thumb, .th { line-height: 0; display: inline-block; border: solid 4px white; -webkit-box-shadow: 0 0 0 1px #dddddd; box-shadow: 0 0 0 1px #dddddd; }
+.imageblock.left, .imageblock[style*="float: left"] { margin: 0.25em 0.625em 1.25em 0; }
+.imageblock.right, .imageblock[style*="float: right"] { margin: 0.25em 0 1.25em 0.625em; }
+.imageblock > .title { margin-bottom: 0; }
+.imageblock.thumb, .imageblock.th { border-width: 6px; }
+.imageblock.thumb > .title, .imageblock.th > .title { padding: 0 0.125em; }
+.image.left, .image.right { margin-top: 0.25em; margin-bottom: 0.25em; display: inline-block; line-height: 0; }
+.image.left { margin-right: 0.625em; }
+.image.right { margin-left: 0.625em; }
+a.image { text-decoration: none; }
+span.footnote, span.footnoteref { vertical-align: super; font-size: 0.875em; }
+span.footnote a, span.footnoteref a { text-decoration: none; }
+#footnotes { padding-top: 0.75em; padding-bottom: 0.75em; margin-bottom: 0.625em; }
+#footnotes hr { width: 20%; min-width: 6.25em; margin: -.25em 0 .75em 0; border-width: 1px 0 0 0; }
+#footnotes .footnote { padding: 0 0.375em; line-height: 1.3; font-size: 0.875em; margin-left: 1.2em; text-indent: -1.2em; margin-bottom: .2em; }
+#footnotes .footnote a:first-of-type { font-weight: bold; text-decoration: none; }
+#footnotes .footnote:last-of-type { margin-bottom: 0; }
+#content #footnotes { margin-top: -0.625em; margin-bottom: 0; padding: 0.75em 0; }
+.gist .file-data > table { border: none; background: #fff; width: 100%; margin-bottom: 0; }
+.gist .file-data > table td.line-data { width: 99%; }
+div.unbreakable { page-break-inside: avoid; }
+.big { font-size: larger; }
+.small { font-size: smaller; }
+.underline { text-decoration: underline; }
+.overline { text-decoration: overline; }
+.line-through { text-decoration: line-through; }
+.aqua { color: #00bfbf; }
+.aqua-background { background-color: #00fafa; }
+.black { color: black; }
+.black-background { background-color: black; }
+.blue { color: #0000bf; }
+.blue-background { background-color: #0000fa; }
+.fuchsia { color: #bf00bf; }
+.fuchsia-background { background-color: #fa00fa; }
+.gray { color: #606060; }
+.gray-background { background-color: #7d7d7d; }
+.green { color: #006000; }
+.green-background { background-color: #007d00; }
+.lime { color: #00bf00; }
+.lime-background { background-color: #00fa00; }
+.maroon { color: #600000; }
+.maroon-background { background-color: #7d0000; }
+.navy { color: #000060; }
+.navy-background { background-color: #00007d; }
+.olive { color: #606000; }
+.olive-background { background-color: #7d7d00; }
+.purple { color: #600060; }
+.purple-background { background-color: #7d007d; }
+.red { color: #bf0000; }
+.red-background { background-color: #fa0000; }
+.silver { color: #909090; }
+.silver-background { background-color: #bcbcbc; }
+.teal { color: #006060; }
+.teal-background { background-color: #007d7d; }
+.white { color: #bfbfbf; }
+.white-background { background-color: #fafafa; }
+.yellow { color: #bfbf00; }
+.yellow-background { background-color: #fafa00; }
+span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
+.admonitionblock td.icon [class^="icon-"]:before { font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); cursor: default; }
+.admonitionblock td.icon .icon-note:before { content: "\f05a"; color: #005498; color: #003f72; }
+.admonitionblock td.icon .icon-tip:before { content: "\f0eb"; text-shadow: 1px 1px 2px rgba(155, 155, 0, 0.8); color: #111; }
+.admonitionblock td.icon .icon-warning:before { content: "\f071"; color: #bf6900; }
+.admonitionblock td.icon .icon-caution:before { content: "\f06d"; color: #bf3400; }
+.admonitionblock td.icon .icon-important:before { content: "\f06a"; color: #bf0000; }
+.conum { display: inline-block; color: white !important; background-color: #222222; -webkit-border-radius: 100px; border-radius: 100px; text-align: center; width: 20px; height: 20px; font-size: 12px; font-weight: bold; line-height: 20px; font-family: Arial, sans-serif; font-style: normal; position: relative; top: -2px; letter-spacing: -1px; }
+.conum * { color: white !important; }
+.conum + b { display: none; }
+.conum:after { content: attr(data-value); }
+.conum:not([data-value]):empty { display: none; }
+.literalblock > .content > pre, .listingblock > .content > pre { -webkit-border-radius: 0; border-radius: 0; }
+
+</style>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Pig vs Hive</h1>
+<span id="author" class="author">Tomasz Borek</span><br>
+<span id="revnumber">version 1.2,</span>
+<span id="revdate">10th September 2015</span>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_setup">Setup</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_installation">Installation</a></li>
+<li><a href="#_why_such_setup">Why such setup?</a></li>
+</ul>
+</li>
+<li><a href="#_behind_technology">Behind Technology</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_map_reduce">Map Reduce</a></li>
+<li><a href="#_hadoop">Hadoop</a></li>
+<li><a href="#_pig">Pig</a></li>
+<li><a href="#_hive">Hive</a></li>
+</ul>
+</li>
+<li><a href="#_comparison_of_sessions">Comparison of sessions</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_pig_example">Pig example</a></li>
+<li><a href="#_hive_2">Hive</a></li>
+</ul>
+</li>
+<li><a href="#_comparison_of_commands">Comparison of commands</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_hadoop_2">Hadoop</a></li>
+<li><a href="#_pig_2">Pig</a></li>
+<li><a href="#_hive_3">Hive</a></li>
+</ul>
+</li>
+<li><a href="#_usability_comparison">Usability comparison</a></li>
+<li><a href="#_conclusion">Conclusion</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_more">More?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+This documentation was done with Asciidoctor 0.1.4 [<a href="http://asciidoctor.org">http://asciidoctor.org</a>]
+</td>
+</tr>
+</table>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Introduction to Pig and Hive along with simple comparison of both.</div>
+<div class="paragraph">
+<p>Aim of this work is to introduce others to Pig, Hive and Hadoop, offering basic understanding of running Map-Reduce jobs via each.<br>
+Along the way I hope to illustrate that comparing Pig <strong>VERSUS</strong> Hadoop is rather shallow, as with each passing realease both are made to cooperate more and more.</p>
+</div>
+<div class="paragraph">
+<p>If however, we are to offer a shallow distinction, that it would go along the following lines:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>the higher familiarity with SQL the better choice Hive becomes</p>
+</li>
+<li>
+<p>one&#8217;s purpose requiring heavy scripting or direct use of Perl/Python would suggest Pig</p>
+</li>
+<li>
+<p>structured data as of now are better in Hive (not big difference however) while unstructured: in Pig</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The more advanced usages however tend to show that using both is quite smart and allows to choose between more ways to achieve same purposes.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Sadly, performance aspect of the comparison, as requiring much more work (and stricter) was left out from this work. All work was done on single-node cluster.
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Project</dt>
+<dd>
+<p>Methods and Systems of Great-Scale Computation (Polish: Metody i Systemy Obliczeń Wielkiej Skali, MISOWS)</p>
+</dd>
+<dt class="hdlist1">Lead by</dt>
+<dd>
+<p><a href="http://www.icsr.agh.edu.pl/~malawski/">dr Maciej Malawski</a></p>
+</dd>
+<dt class="hdlist1">Author</dt>
+<dd>
+<p><a href="mailto:Tomasz.Borek@gmail.com">Tomasz.Borek@gmail.com</a>, <a href="https://twitter.com/LAFK_pl/">@LAFK_pl</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setup">Setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I chose LXC as a container for whole work. Hadoop was obvious as a platform, so were Pig and Hive. This meant I needed Java, and I chose Java 8. This part of documentation explains <a href="#_why_such_setup">Why such setup?</a> and has a technical steps for <a href="#_installation">Installation</a> of required software.</p>
+</div>
+<div class="sect2">
+<h3 id="_installation">Installation</h3>
+<div class="paragraph">
+<p>Project set up guide, in steps, to set up necessary technology:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">LXC</dt>
+<dd>
+<p><code>sudo apt-get install lxc; lxc-create -t ubuntu -n test1</code> installs and creates a test container</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title">LXC and Hadoop?</div>
+<div class="paragraph">
+<p>Both technologies are great together, but you may want to read on them to nicely exploit their capabilities as a combo.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://github.com/t3rmin4t0r/notes/wiki/Using-LXC-for-hadoop">To quickly grasp LXC and Hadoop combo</a>, thank you Terminator :-)</p>
+</li>
+<li>
+<p><a href="https://ofirm.wordpress.com/2014/01/05/creating-a-virtualized-fully-distributed-hadoop-cluster-using-linux-containers/">Full setup process including clustering and network</a>, excellent piece by Ofir Manor, great thanks!</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Java 8</dt>
+<dd>
+<p>Ubuntu LXC container comes with little packages. To have Oracle Java I needed to add a PPA repository.<br>
+I summed this stage on my blog <a href="https://lafkblogs.wordpress.com/2015/09/14/java8-in-lxc-or-lxc-and-add-apt-repository/">https://lafkblogs.wordpress.com/2015/09/14/java8-in-lxc-or-lxc-and-add-apt-repository/</a></p>
+</dd>
+<dt class="hdlist1">Hadoop 2.7.1</dt>
+<dd>
+<p>single-node cluster, container required <code>rsync</code> (<code>ssh</code> was present).<br>
+Installed per original docs: <a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html">http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html</a><br>
+In stand-alone mode: <a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation">http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation</a></p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+After downloading Hadoop you need to put the file in container, use <code>sudo mv hadoopArchive /var/lib/lxc/containerName/rootfs/tmp</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+LXC enables easy and lightweight cluster setup on one machine. See <a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/ClusterSetup.html">relevant Hadoop docs (2.7.1 when I wrote this)</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Verify installation with example</div>
+<div class="content">
+<pre>  $ mkdir input
+  $ cp etc/hadoop/*.xml input
+  $ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar grep input output 'dfs[a-z.]+'
+  $ cat output/*</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Pig</dt>
+<dd>
+<p>choose your own version, when I type this 0.15 is latest. Still, docs are on 0.14.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Install and verify</div>
+<div class="content">
+<pre>  $ wget http://ftp.ps.pl/pub/apache/pig/latest/pig-0.15.0.tar.gz
+  $ tar -xf pig-0.15.0.tar.gz
+  $ cd pig-0.15.0
+  $ export PATH=/tmp/pig-0.15.0/bin/:$PATH # recommended though: add in profile
+  $ pig -h # should now display usage
+  $ export HADOOP_CONF_DIR=/tmp/hadoop-2.7.1/input/ # otherwise forget running map-reduce mode
+  $ pig # should bring up GRUNT shell, like so:
+  grunt&gt;</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hive</dt>
+<dd>
+<p>choose release from <a href="http://ftp.piotrkosoft.net/pub/mirrors/ftp.apache.org/hive/">http://ftp.piotrkosoft.net/pub/mirrors/ftp.apache.org/hive/</a></p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">Install and verify</div>
+<div class="content">
+<pre>  $ wget http://ftp.piotrkosoft.net/pub/mirrors/ftp.apache.org/hive/hive-1.2.1/apache-hive-1.2.1-bin.tar.gz
+  $ tar -xzvf apache-hive-1.2.1-bin.tar.gz
+  $ cd apache-hive-1.2.1-bin
+  $ export HIVE_HOME=$(pwd)
+  $ echo $HIVE_HOME
+  $ export PATH=$HIVE_HOME/bin:$PATH
+  $ export HADOOP_HOME=/tmp/hadoop-2.7.1/
+  $ hive
+
+Logging initialized using configuration in jar:file:/tmp/apache-hive-1.2.1-bin/lib/hive-common-1.2.1.jar!/hive-log4j.properties
+hive&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All steps were done on GNU/Linux, namely Ubuntu 14.04 LTS. Kernel version: #62~14.04.1-Ubuntu SMP Tue Aug 11 16:27:16 UTC 2015.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_such_setup">Why such setup?</h3>
+<div class="paragraph">
+<p>I chose <strong>LXC</strong> over full virtualization for following reasons:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>lighter (overhead, start and stop, overall)</p>
+</li>
+<li>
+<p>wanted to try it and have Hadoop in it</p>
+</li>
+<li>
+<p>cheaper and easier to set up cluster on one laptop (RAM, SSD now ain&#8217;t so large)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>I chose <strong>Java 8</strong> because:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://wiki.apache.org/hadoop/HadoopJavaVersions">http://wiki.apache.org/hadoop/HadoopJavaVersions</a> restricts Java usage (Hotspot, late 6 or later)</p>
+</li>
+<li>
+<p>Oracle&#8217;s flavour is a tad easier to install on my Ubuntu version</p>
+</li>
+<li>
+<p>version 8 is by now (September 2015) the only supported version (which may carry weight for some)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Version 2.7.1 of Hadoop is current one. Single-node cluster for simple comparison is quite enough, as I&#8217;m not delving into performance aspects due to lack of time.</p>
+</div>
+<div class="paragraph">
+<p>Rest of the choices are rather self-explanatory once one looks at project aim.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_behind_technology">Behind Technology</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This part tries illustrating several concepts behind Map Reduce paradigm, Hadoop platform, and finally Pig and Hive tools. It&#8217;s a short part, with links for further reading, an extra to real project aim that was created to answer some question potential reader might have about tools used here.</p>
+</div>
+<div class="paragraph">
+<p>View from above generally looks like that:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="HadoopEcosystem.png" alt="Image shows how Hadoop is to Pig" width="to Hive and number of other known Big Data tools">
+</div>
+</div>
+<div class="paragraph">
+<p>And this all rests on Hadoop, via HDFS. Before we get to any of those in detail however, I&#8217;d like to say few words about Big Data and it&#8217;s problems. Big Data is VERY often talked about, quoted to be this or that. There&#8217;s nice quote on the Internet that explains that confusion:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="BigData_DanAriely.jpg" alt="Big Data quote by Dan Ariely" width="comparing it to teenage sex - everybody talks about it" height="everybody thinks OTHERS are doing it...">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Big Data</dt>
+<dd>
+<p>for now we&#8217;ll assume it&#8217;s working with data in sufficiently large volume, where <em>sufficiently</em> means that single-thread or sequential way of working with it will be slow (or not fast) enough to impact the reason we reach for that data anyway.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Problems:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Various data sources: user feeds, partner feeds, large DBs, FTP places, social media&#8230;</p>
+</li>
+<li>
+<p>Various data, structured, unstructured, as text, as image&#8230;</p>
+</li>
+<li>
+<p>The sheer amount of data parsed daily or even hourly (depends on scale)</p>
+</li>
+<li>
+<p>Retention of such data</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>There are more, but let&#8217;s shortly discuss these four.</p>
+</div>
+<div class="paragraph">
+<p><strong>Various data sources</strong> make it hard to uniformly gather and process data or even expect it at certain places and/or intervals. Requires elasticity.<br>
+<strong>Data diversity</strong> means we can&#8217;t think of one structure that will "hold it" and be any good at it. The data often require complex adjustments prior to being stored.<br>
+<strong>Sheer amount</strong> means filtering is <strong>a must</strong>. No human being can process hundreds of megabytes of data, and with Big Data we may even be talking millions of petabytes.<br>
+<strong>Data retention</strong> requires us to think how this data will be stored, where, and how long.</p>
+</div>
+<div class="sect2">
+<h3 id="_map_reduce">Map Reduce</h3>
+<div class="paragraph">
+<p>is a paradigm. In world where working through tera-(or more)-bytes of data needs to be done close to real-time, working with said data sequentially just won&#8217;t suffice.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, an idea was proposed to split the work in two stages and split the data into as many pieces as it&#8217;s good for cluster we have at the moment.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Map</dt>
+<dd>
+<p>During Map, our workers take up data pieces assigned to them and try to do preliminary stages of work, reaching "somewhere". Upon finish, partially processed data is handed over. Often we say workers here are called <em>mappers</em> or <em>emitters</em>.</p>
+</dd>
+<dt class="hdlist1">Reduce</dt>
+<dd>
+<p><em>Reductors</em> take over work done by <em>mappers</em> and apply final touches.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+Work done by mappers may get <em>shuffled</em>. It&#8217;s preliminary sorting, so similar data arrives at same set of reductors.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Final stage is merging and reporting the result.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="map_reduce_GerardNico.jpg" alt="Gerard Nico explains most typical word count example">
+</div>
+</div>
+<div class="paragraph">
+<p>If we wanted to see example with shuffling, Packt Publishing had a nice one within their M/R introduction, counting messages of different log levels:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="PacktMRIntroduction.png" alt="Diagram showing how shuffling works between mappers and reductors">
+</div>
+</div>
+<div class="paragraph">
+<p>Map/Reduce, often abbreviated to MR or M/R, quickly became a common paradigm for Big Data crunchers. It allows to deal with huge data, of great variety and coming from different sources. It filters it and allows for pre-processing (during mapping phase or even prior to). It makes working with Big Data manageable.</p>
+</div>
+<div class="paragraph">
+<p>It was a matter of time, it was employed more.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hadoop">Hadoop</h3>
+<div class="paragraph">
+<p>is a platform for MR jobs. If I were to show how MR looks like on Hadoop, that would be best:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="MR_Hadoop.png" alt="MR on Hadoop cluster" width="complex image with lots of details" height="shows cluster nodes">
+</div>
+</div>
+<div class="paragraph">
+<p>Important pillar of Hadoop is it&#8217;s filesystem, <strong>HDFS</strong>. HDFS makes sure splits and storing of data are being taken care of, and well.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="HDFS.png" alt="Hadoop data nodes split data into bins" width="and bins into chunks">
+</div>
+</div>
+<div class="paragraph">
+<p>See links for more.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pig">Pig</h3>
+<div class="paragraph">
+<p>an execution engine atop Hadoop. Protects from changes in Hadoop, offers functionality that previously had to be re-developed (join, filter, etc.).<br>
+Pig was originally developed at Yahoo Research so their researchers could query their data without boring through Hadoop MR jobs.</p>
+</div>
+<div class="paragraph">
+<p>PigLatin is easier to learn than Java and doesn&#8217;t require Java IDE (or Java programmer, for that matter). It&#8217;s a data flow language.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Pig resides on user machine, submits the jobs to cluster. Therefore, no need to install cluster connectors or set Pig on cluster.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="HowPigWorks.png" alt="Image shows how PigLatin is picked up by `pig.jar` and translated to Hadoop MR job.">
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s a good introduction to Pig, by Cloudera. Available as PDF, see links for more.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hive">Hive</h3>
+<div class="paragraph">
+<p>is also an execution engine atop Hadoop. It started as FB crunched it&#8217;s Big Data:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="FBBigDataSetup.png" alt="Two data sources lead to one data munging server which feeds Oracle DB">
+</div>
+</div>
+<div class="paragraph">
+<p>Data collection server above was Hadoop, and there MR jobs were launched. However:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>CLI for end-users was missing</p>
+</li>
+<li>
+<p>often folks would NOT run their ad-hoc queries for MR jobs were too tedious for them</p>
+</li>
+<li>
+<p>FB data is relational, there was no support to reflect it and use it</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Thus Hive was born.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comparison_of_sessions">Comparison of sessions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hadoop offers Map/Reduce capabilities, however these are unwieldy, while powerful. Both Pig and Hive were created to make them easier to use.</p>
+</div>
+<div id="app-listing" class="listingblock">
+<div class="title">Raw Hadoop Map Reduce "hello world" example: word count</div>
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">root@test1:/tmp/hadoop-2.7.1# bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar grep input output 'dfs[a-z.]+'
+15/09/15 12:25:10 INFO Configuration.deprecation: session.id is deprecated. Instead, use dfs.metrics.session-id
+15/09/15 12:25:10 INFO jvm.JvmMetrics: Initializing JVM Metrics with processName=JobTracker, sessionId=
+15/09/15 12:25:11 INFO input.FileInputFormat: Total input paths to process : 8
+15/09/15 12:25:12 INFO mapreduce.JobSubmitter: number of splits:8
+15/09/15 12:25:12 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_local1461732489_0001
+15/09/15 12:25:13 INFO mapreduce.Job: The url to track the job: http://localhost:8080/
+15/09/15 12:25:13 INFO mapreduce.Job: Running job: job_local1461732489_0001
+15/09/15 12:25:13 INFO mapred.LocalJobRunner: OutputCommitter set in config null
+15/09/15 12:25:13 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:13 INFO mapred.LocalJobRunner: OutputCommitter is org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter
+15/09/15 12:25:13 INFO mapred.LocalJobRunner: Waiting for map tasks
+15/09/15 12:25:13 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000000_0
+15/09/15 12:25:13 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:13 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:13 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/hadoop-policy.xml:0+9683
+15/09/15 12:25:14 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:14 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:14 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:14 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:14 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:14 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:14 INFO mapreduce.Job: Job job_local1461732489_0001 running in uber mode : false
+15/09/15 12:25:14 INFO mapreduce.Job:  map 0% reduce 0%
+15/09/15 12:25:14 INFO mapred.LocalJobRunner:
+15/09/15 12:25:14 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:14 INFO mapred.MapTask: Spilling map output
+15/09/15 12:25:14 INFO mapred.MapTask: bufstart = 0; bufend = 17; bufvoid = 104857600
+15/09/15 12:25:14 INFO mapred.MapTask: kvstart = 26214396(104857584); kvend = 26214396(104857584); length = 1/6553600
+15/09/15 12:25:14 INFO mapred.MapTask: Finished spill 0
+15/09/15 12:25:14 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000000_0 is done. And is in the process of committing
+15/09/15 12:25:14 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:14 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000000_0' done.
+15/09/15 12:25:14 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000000_0
+15/09/15 12:25:14 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000001_0
+15/09/15 12:25:14 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:14 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:14 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/kms-site.xml:0+5511
+15/09/15 12:25:14 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:14 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:14 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:14 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:14 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:14 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:14 INFO mapred.LocalJobRunner:
+15/09/15 12:25:14 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:14 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000001_0 is done. And is in the process of committing
+15/09/15 12:25:14 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:14 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000001_0' done.
+15/09/15 12:25:14 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000001_0
+15/09/15 12:25:14 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000002_0
+15/09/15 12:25:14 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:14 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:14 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/capacity-scheduler.xml:0+4436
+15/09/15 12:25:15 INFO mapreduce.Job:  map 100% reduce 0%
+15/09/15 12:25:15 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:15 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:15 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:15 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:15 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:15 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:15 INFO mapred.LocalJobRunner:
+15/09/15 12:25:15 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:15 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000002_0 is done. And is in the process of committing
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:15 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000002_0' done.
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000002_0
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000003_0
+15/09/15 12:25:15 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:15 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:15 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/kms-acls.xml:0+3518
+15/09/15 12:25:15 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:15 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:15 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:15 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:15 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:15 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:15 INFO mapred.LocalJobRunner:
+15/09/15 12:25:15 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:15 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000003_0 is done. And is in the process of committing
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:15 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000003_0' done.
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000003_0
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000004_0
+15/09/15 12:25:15 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:15 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:15 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/hdfs-site.xml:0+775
+15/09/15 12:25:15 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:15 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:15 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:15 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:15 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:15 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:15 INFO mapred.LocalJobRunner:
+15/09/15 12:25:15 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:15 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000004_0 is done. And is in the process of committing
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:15 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000004_0' done.
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000004_0
+15/09/15 12:25:15 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000005_0
+15/09/15 12:25:16 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:16 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:16 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/core-site.xml:0+774
+15/09/15 12:25:16 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:16 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:16 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:16 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:16 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:16 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:16 INFO mapred.LocalJobRunner:
+15/09/15 12:25:16 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:16 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000005_0 is done. And is in the process of committing
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:16 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000005_0' done.
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000005_0
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000006_0
+15/09/15 12:25:16 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:16 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:16 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/yarn-site.xml:0+690
+15/09/15 12:25:16 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:16 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:16 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:16 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:16 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:16 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:16 INFO mapred.LocalJobRunner:
+15/09/15 12:25:16 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:16 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000006_0 is done. And is in the process of committing
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:16 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000006_0' done.
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000006_0
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_m_000007_0
+15/09/15 12:25:16 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:16 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:16 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/input/httpfs-site.xml:0+620
+15/09/15 12:25:16 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:16 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:16 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:16 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:16 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:16 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:16 INFO mapred.LocalJobRunner:
+15/09/15 12:25:16 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:16 INFO mapred.Task: Task:attempt_local1461732489_0001_m_000007_0 is done. And is in the process of committing
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:16 INFO mapred.Task: Task 'attempt_local1461732489_0001_m_000007_0' done.
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_m_000007_0
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: map task executor complete.
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Waiting for reduce tasks
+15/09/15 12:25:16 INFO mapred.LocalJobRunner: Starting task: attempt_local1461732489_0001_r_000000_0
+15/09/15 12:25:16 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:16 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:16 INFO mapred.ReduceTask: Using ShuffleConsumerPlugin: org.apache.hadoop.mapreduce.task.reduce.Shuffle@469ef749
+15/09/15 12:25:16 INFO reduce.MergeManagerImpl: MergerManager: memoryLimit=368102592, maxSingleShuffleLimit=92025648, mergeThreshold=242947728, ioSortFactor=10, memToMemMergeOutputsThreshold=10
+15/09/15 12:25:16 INFO reduce.EventFetcher: attempt_local1461732489_0001_r_000000_0 Thread started: EventFetcher for fetching Map Completion Events
+15/09/15 12:25:16 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000007_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:16 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000007_0
+15/09/15 12:25:16 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 1, commitMemory -&gt; 0, usedMemory -&gt;2
+15/09/15 12:25:16 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000000_0 decomp: 21 len: 25 to MEMORY
+15/09/15 12:25:16 INFO reduce.InMemoryMapOutput: Read 21 bytes from map-output for attempt_local1461732489_0001_m_000000_0
+15/09/15 12:25:16 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 21, inMemoryMapOutputs.size() -&gt; 2, commitMemory -&gt; 2, usedMemory -&gt;23
+15/09/15 12:25:16 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000001_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:16 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000001_0
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 3, commitMemory -&gt; 23, usedMemory -&gt;25
+15/09/15 12:25:17 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000004_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:17 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000004_0
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 4, commitMemory -&gt; 25, usedMemory -&gt;27
+15/09/15 12:25:17 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000002_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:17 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000002_0
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 5, commitMemory -&gt; 27, usedMemory -&gt;29
+15/09/15 12:25:17 WARN io.ReadaheadPool: Failed readahead on ifile
+EBADF: Bad file descriptor
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX.posix_fadvise(Native Method)
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX.posixFadviseIfPossible(NativeIO.java:267)
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX$CacheManipulator.posixFadviseIfPossible(NativeIO.java:146)
+	at org.apache.hadoop.io.ReadaheadPool$ReadaheadRequestImpl.run(ReadaheadPool.java:206)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+15/09/15 12:25:17 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000005_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:17 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000005_0
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 6, commitMemory -&gt; 29, usedMemory -&gt;31
+15/09/15 12:25:17 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000003_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:17 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000003_0
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 7, commitMemory -&gt; 31, usedMemory -&gt;33
+15/09/15 12:25:17 WARN io.ReadaheadPool: Failed readahead on ifile
+EBADF: Bad file descriptor
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX.posix_fadvise(Native Method)
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX.posixFadviseIfPossible(NativeIO.java:267)
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX$CacheManipulator.posixFadviseIfPossible(NativeIO.java:146)
+	at org.apache.hadoop.io.ReadaheadPool$ReadaheadRequestImpl.run(ReadaheadPool.java:206)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+15/09/15 12:25:17 INFO reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1461732489_0001_m_000006_0 decomp: 2 len: 6 to MEMORY
+15/09/15 12:25:17 INFO reduce.InMemoryMapOutput: Read 2 bytes from map-output for attempt_local1461732489_0001_m_000006_0
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 2, inMemoryMapOutputs.size() -&gt; 8, commitMemory -&gt; 33, usedMemory -&gt;35
+15/09/15 12:25:17 WARN io.ReadaheadPool: Failed readahead on ifile
+EBADF: Bad file descriptor
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX.posix_fadvise(Native Method)
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX.posixFadviseIfPossible(NativeIO.java:267)
+	at org.apache.hadoop.io.nativeio.NativeIO$POSIX$CacheManipulator.posixFadviseIfPossible(NativeIO.java:146)
+	at org.apache.hadoop.io.ReadaheadPool$ReadaheadRequestImpl.run(ReadaheadPool.java:206)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+15/09/15 12:25:17 INFO reduce.EventFetcher: EventFetcher is interrupted.. Returning
+15/09/15 12:25:17 INFO mapred.LocalJobRunner: 8 / 8 copied.
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: finalMerge called with 8 in-memory map-outputs and 0 on-disk map-outputs
+15/09/15 12:25:17 INFO mapred.Merger: Merging 8 sorted segments
+15/09/15 12:25:17 INFO mapred.Merger: Down to the last merge-pass, with 1 segments left of total size: 10 bytes
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: Merged 8 segments, 35 bytes to disk to satisfy reduce memory limit
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: Merging 1 files, 25 bytes from disk
+15/09/15 12:25:17 INFO reduce.MergeManagerImpl: Merging 0 segments, 0 bytes from memory into reduce
+15/09/15 12:25:17 INFO mapred.Merger: Merging 1 sorted segments
+15/09/15 12:25:17 INFO mapred.Merger: Down to the last merge-pass, with 1 segments left of total size: 10 bytes
+15/09/15 12:25:17 INFO mapred.LocalJobRunner: 8 / 8 copied.
+15/09/15 12:25:17 INFO Configuration.deprecation: mapred.skip.on is deprecated. Instead, use mapreduce.job.skiprecords
+15/09/15 12:25:17 INFO mapred.Task: Task:attempt_local1461732489_0001_r_000000_0 is done. And is in the process of committing
+15/09/15 12:25:17 INFO mapred.LocalJobRunner: 8 / 8 copied.
+15/09/15 12:25:17 INFO mapred.Task: Task attempt_local1461732489_0001_r_000000_0 is allowed to commit now
+15/09/15 12:25:17 INFO output.FileOutputCommitter: Saved output of task 'attempt_local1461732489_0001_r_000000_0' to file:/tmp/hadoop-2.7.1/grep-temp-1661610351/_temporary/0/task_local1461732489_0001_r_000000
+15/09/15 12:25:17 INFO mapred.LocalJobRunner: reduce &gt; reduce
+15/09/15 12:25:17 INFO mapred.Task: Task 'attempt_local1461732489_0001_r_000000_0' done.
+15/09/15 12:25:17 INFO mapred.LocalJobRunner: Finishing task: attempt_local1461732489_0001_r_000000_0
+15/09/15 12:25:17 INFO mapred.LocalJobRunner: reduce task executor complete.
+15/09/15 12:25:17 INFO mapreduce.Job:  map 100% reduce 100%
+15/09/15 12:25:18 INFO mapreduce.Job: Job job_local1461732489_0001 completed successfully
+15/09/15 12:25:18 INFO mapreduce.Job: Counters: 30
+	File System Counters
+		FILE: Number of bytes read=2690974
+		FILE: Number of bytes written=4958273
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+	Map-Reduce Framework
+		Map input records=745
+		Map output records=1
+		Map output bytes=17
+		Map output materialized bytes=67
+		Input split bytes=869
+		Combine input records=1
+		Combine output records=1
+		Reduce input groups=1
+		Reduce shuffle bytes=67
+		Reduce input records=1
+		Reduce output records=1
+		Spilled Records=2
+		Shuffled Maps =8
+		Failed Shuffles=0
+		Merged Map outputs=8
+		GC time elapsed (ms)=224
+		Total committed heap usage (bytes)=4159176704
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters
+		Bytes Read=26007
+	File Output Format Counters
+		Bytes Written=123
+15/09/15 12:25:18 INFO jvm.JvmMetrics: Cannot initialize JVM Metrics with processName=JobTracker, sessionId= - already initialized
+15/09/15 12:25:18 INFO input.FileInputFormat: Total input paths to process : 1
+15/09/15 12:25:18 INFO mapreduce.JobSubmitter: number of splits:1
+15/09/15 12:25:18 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_local1639425834_0002
+15/09/15 12:25:19 INFO mapreduce.Job: The url to track the job: http://localhost:8080/
+15/09/15 12:25:19 INFO mapreduce.Job: Running job: job_local1639425834_0002
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: OutputCommitter set in config null
+15/09/15 12:25:19 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: OutputCommitter is org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: Waiting for map tasks
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: Starting task: attempt_local1639425834_0002_m_000000_0
+15/09/15 12:25:19 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:19 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:19 INFO mapred.MapTask: Processing split: file:/tmp/hadoop-2.7.1/grep-temp-1661610351/part-r-00000:0+111
+15/09/15 12:25:19 INFO mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+15/09/15 12:25:19 INFO mapred.MapTask: mapreduce.task.io.sort.mb: 100
+15/09/15 12:25:19 INFO mapred.MapTask: soft limit at 83886080
+15/09/15 12:25:19 INFO mapred.MapTask: bufstart = 0; bufvoid = 104857600
+15/09/15 12:25:19 INFO mapred.MapTask: kvstart = 26214396; length = 6553600
+15/09/15 12:25:19 INFO mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+15/09/15 12:25:19 INFO mapred.LocalJobRunner:
+15/09/15 12:25:19 INFO mapred.MapTask: Starting flush of map output
+15/09/15 12:25:19 INFO mapred.MapTask: Spilling map output
+15/09/15 12:25:19 INFO mapred.MapTask: bufstart = 0; bufend = 17; bufvoid = 104857600
+15/09/15 12:25:19 INFO mapred.MapTask: kvstart = 26214396(104857584); kvend = 26214396(104857584); length = 1/6553600
+15/09/15 12:25:19 INFO mapred.MapTask: Finished spill 0
+15/09/15 12:25:19 INFO mapred.Task: Task:attempt_local1639425834_0002_m_000000_0 is done. And is in the process of committing
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: map
+15/09/15 12:25:19 INFO mapred.Task: Task 'attempt_local1639425834_0002_m_000000_0' done.
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: Finishing task: attempt_local1639425834_0002_m_000000_0
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: map task executor complete.
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: Waiting for reduce tasks
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: Starting task: attempt_local1639425834_0002_r_000000_0
+15/09/15 12:25:19 INFO output.FileOutputCommitter: File Output Committer Algorithm version is 1
+15/09/15 12:25:19 INFO mapred.Task:  Using ResourceCalculatorProcessTree : [ ]
+15/09/15 12:25:19 INFO mapred.ReduceTask: Using ShuffleConsumerPlugin: org.apache.hadoop.mapreduce.task.reduce.Shuffle@397cf689
+15/09/15 12:25:19 INFO reduce.MergeManagerImpl: MergerManager: memoryLimit=368102592, maxSingleShuffleLimit=92025648, mergeThreshold=242947728, ioSortFactor=10, memToMemMergeOutputsThreshold=10
+15/09/15 12:25:19 INFO reduce.EventFetcher: attempt_local1639425834_0002_r_000000_0 Thread started: EventFetcher for fetching Map Completion Events
+15/09/15 12:25:19 INFO reduce.LocalFetcher: localfetcher#2 about to shuffle output of map attempt_local1639425834_0002_m_000000_0 decomp: 21 len: 25 to MEMORY
+15/09/15 12:25:19 INFO reduce.InMemoryMapOutput: Read 21 bytes from map-output for attempt_local1639425834_0002_m_000000_0
+15/09/15 12:25:19 INFO reduce.MergeManagerImpl: closeInMemoryFile -&gt; map-output of size: 21, inMemoryMapOutputs.size() -&gt; 1, commitMemory -&gt; 0, usedMemory -&gt;21
+15/09/15 12:25:19 INFO reduce.EventFetcher: EventFetcher is interrupted.. Returning
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: 1 / 1 copied.
+15/09/15 12:25:19 INFO reduce.MergeManagerImpl: finalMerge called with 1 in-memory map-outputs and 0 on-disk map-outputs
+15/09/15 12:25:19 INFO mapred.Merger: Merging 1 sorted segments
+15/09/15 12:25:19 INFO mapred.Merger: Down to the last merge-pass, with 1 segments left of total size: 11 bytes
+15/09/15 12:25:19 INFO reduce.MergeManagerImpl: Merged 1 segments, 21 bytes to disk to satisfy reduce memory limit
+15/09/15 12:25:19 INFO reduce.MergeManagerImpl: Merging 1 files, 25 bytes from disk
+15/09/15 12:25:19 INFO reduce.MergeManagerImpl: Merging 0 segments, 0 bytes from memory into reduce
+15/09/15 12:25:19 INFO mapred.Merger: Merging 1 sorted segments
+15/09/15 12:25:19 INFO mapred.Merger: Down to the last merge-pass, with 1 segments left of total size: 11 bytes
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: 1 / 1 copied.
+15/09/15 12:25:19 INFO mapred.Task: Task:attempt_local1639425834_0002_r_000000_0 is done. And is in the process of committing
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: 1 / 1 copied.
+15/09/15 12:25:19 INFO mapred.Task: Task attempt_local1639425834_0002_r_000000_0 is allowed to commit now
+15/09/15 12:25:19 INFO output.FileOutputCommitter: Saved output of task 'attempt_local1639425834_0002_r_000000_0' to file:/tmp/hadoop-2.7.1/output/_temporary/0/task_local1639425834_0002_r_000000
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: reduce &gt; reduce
+15/09/15 12:25:19 INFO mapred.Task: Task 'attempt_local1639425834_0002_r_000000_0' done.
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: Finishing task: attempt_local1639425834_0002_r_000000_0
+15/09/15 12:25:19 INFO mapred.LocalJobRunner: reduce task executor complete.
+15/09/15 12:25:20 INFO mapreduce.Job: Job job_local1639425834_0002 running in uber mode : false
+15/09/15 12:25:20 INFO mapreduce.Job:  map 100% reduce 100%
+15/09/15 12:25:20 INFO mapreduce.Job: Job job_local1639425834_0002 completed successfully
+15/09/15 12:25:20 INFO mapreduce.Job: Counters: 30
+	File System Counters
+		FILE: Number of bytes read=1158642
+		FILE: Number of bytes written=2199756
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+	Map-Reduce Framework
+		Map input records=1
+		Map output records=1
+		Map output bytes=17
+		Map output materialized bytes=25
+		Input split bytes=121
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=1
+		Reduce shuffle bytes=25
+		Reduce input records=1
+		Reduce output records=1
+		Spilled Records=2
+		Shuffled Maps =1
+		Failed Shuffles=0
+		Merged Map outputs=1
+		GC time elapsed (ms)=0
+		Total committed heap usage (bytes)=1051721728
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters
+		Bytes Read=123
+	File Output Format Counters
+		Bytes Written=23
+root@test1:/tmp/hadoop-2.7.1# cat output/*
+1	dfsadmin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We searched for <em>dfs</em> followed by letters (in lower case) and we found 1 instance: <em>dfsadmin</em> word.</p>
+</div>
+<div class="sect2">
+<h3 id="_pig_example">Pig example</h3>
+<div id="app-listing" class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">  $ wget https://www.dropbox.com/s/c4qkctgdxvq41fe/SalesJan2009_final.csv
+  $ mv SalesJan2009_final.csv /tmp
+  $ pig
+15/09/17 10:06:22 INFO pig.ExecTypeProvider: Trying ExecType : LOCAL
+15/09/17 10:06:22 INFO pig.ExecTypeProvider: Trying ExecType : MAPREDUCE
+15/09/17 10:06:22 INFO pig.ExecTypeProvider: Picked MAPREDUCE as the ExecType
+2015-09-17 10:06:22,331 [main] INFO  org.apache.pig.Main - Apache Pig version 0.15.0 (r1682971) compiled Jun 01 2015, 11:43:55
+2015-09-17 10:06:22,331 [main] INFO  org.apache.pig.Main - Logging error messages to: /tmp/pig-0.15.0/pig_1442477182329.log
+2015-09-17 10:06:22,368 [main] INFO  org.apache.pig.impl.util.Utils - Default bootup file /root/.pigbootup not found
+2015-09-17 10:06:22,649 [main] INFO  org.apache.pig.backend.hadoop.executionengine.HExecutionEngine - Connecting to hadoop file system at: file:///
+  &gt; grunt cp /tmp/SalesJan2009_final.csv SalesJan2009_final.csv
+wejscie = LOAD 'SalesJan2009_final.csv' using PigStorage(';')
+AS (transdate:chararray,
+product:chararray,
+price:long,
+paymenttype:chararray,
+name:chararray,
+city:chararray,
+state:chararray,
+ccode:chararray,
+country:chararray,
+latitude:double,
+longitude:double);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this, we just loaded the data to Pig, as <code>wejscie</code>. To examine them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; describe wejscie;
+wejscie: {transdate: chararray,product: chararray,price: long,paymenttype: chararray,name: chararray,city: chararray,state: chararray,ccode: chararray,country: chararray,latitude: double,longitude: double}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or, via MR framework:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; illustrate wejscie;
+2015-09-17 10:09:01,110 [main] INFO  org.apache.pig.backend.hadoop.executionengine.HExecutionEngine - Connecting to hadoop file system at: file:///
+2015-09-17 10:09:01,144 [main] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2015-09-17 10:09:01,171 [main] INFO  org.apache.pig.newplan.logical.optimizer.LogicalPlanOptimizer - {RULES_ENABLED=[ConstantCalculator, LoadTypeCastInserter, PredicatePushdownOptimizer, StreamTypeCastInserter], RULES_DISABLED=[AddForEach, ColumnMapKeyPrune, GroupByConstParallelSetter, LimitOptimizer, MergeFilter, MergeForEach, PartitionFilterOptimizer, PushDownForEachFlatten, PushUpFilter, SplitFilter]}
+2015-09-17 10:09:01,230 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,266 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,266 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,279 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,285 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,367 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,380 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,387 [main] INFO  org.apache.hadoop.mapreduce.lib.input.FileInputFormat - Total input paths to process : 1
+2015-09-17 10:09:01,387 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+2015-09-17 10:09:01,392 [main] WARN  org.apache.hadoop.io.compress.snappy.LoadSnappy - Snappy native library not loaded
+2015-09-17 10:09:01,437 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,438 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,438 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,439 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,439 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,458 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,462 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,466 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,467 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,467 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,468 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,468 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,487 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,491 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,493 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,493 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,493 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,494 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,494 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,515 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,520 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,521 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,521 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,521 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,522 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,522 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,537 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,540 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+(2009-01-20 19:08:00,Product1,1200,Amex,Rhonda,Atlanta,GA,US,United States,33.74889,-84.38806)
+2015-09-17 10:09:01,545 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,545 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,545 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,546 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,546 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,558 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,562 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,563 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,563 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,563 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,564 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,564 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,579 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,582 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,582 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,583 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,583 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,584 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,584 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,599 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,602 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+2015-09-17 10:09:01,602 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:09:01,602 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:09:01,602 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:09:01,603 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:09:01,603 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:09:01,616 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:09:01,619 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapOnly$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10] C:  R:
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| wejscie     | transdate:chararray    | product:chararray    | price:long    | paymenttype:chararray    | name:chararray    | city:chararray    | state:chararray    | ccode:chararray    | country:chararray    | latitude:double    | longitude:double    |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|             | 2009-01-20 19:08:00    | Product1             | 1200          | Amex                     | Rhonda            | Atlanta           | GA                 | US                 | United States        | 33.74889           | -84.38806           |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grouping and aggregating is fairly easy to setup:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; zgrupowane = GROUP wejscie by product;
+grunt&gt; agregat = FOREACH zgrupowane GENERATE group as product, COUNT(wejscie) as liczba;
+grunt&gt; agregat_sort = ORDER agregat by liczba ASC;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we could use <code>DUMP agregat_sort;</code> to start MR job and show us counted data, but when the data set is large, that&#8217;s not recommended (takes too long and is CPU intensive). Instead we use <code>STORE agregat_sort INTO 'sumaryczna_sprzedaz';</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="_more_examples">More examples</h4>
+<div class="paragraph">
+<p><strong>Which cards are used to pay and how often?</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; grupa = GROUP wejscie BY paymenttype;
+grunt&gt; summed = FOREACH grupa GENERATE group as payment, SUM(wejscie.price) as summed_prices;
+grunt&gt; dump summed;
+2015-09-17 10:21:45,508 [main] WARN  org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2015-09-17 10:21:45,534 [main] INFO  org.apache.pig.tools.pigstats.ScriptState - Pig features used in the script: GROUP_BY
+2015-09-17 10:21:45,561 [main] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2015-09-17 10:21:45,598 [main] INFO  org.apache.pig.newplan.logical.optimizer.LogicalPlanOptimizer - {RULES_ENABLED=[AddForEach, ColumnMapKeyPrune, ConstantCalculator, GroupByConstParallelSetter, LimitOptimizer, LoadTypeCastInserter, MergeFilter, MergeForEach, PartitionFilterOptimizer, PredicatePushdownOptimizer, PushDownForEachFlatten, PushUpFilter, SplitFilter, StreamTypeCastInserter]}
+2015-09-17 10:21:45,695 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:21:45,704 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.CombinerOptimizerUtil - Choosing to move algebraic foreach to combiner
+2015-09-17 10:21:45,721 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:21:45,722 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:21:45,773 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:21:45,782 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:21:45,784 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Reduce phase detected, estimating # of required reducers.
+2015-09-17 10:21:45,785 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Using reducer estimator: org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.InputSizeReducerEstimator
+2015-09-17 10:21:45,790 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.InputSizeReducerEstimator - BytesPerReducer=1000000000 maxReducers=999 totalInputFileSize=98832
+2015-09-17 10:21:45,791 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Setting Parallelism to 1
+2015-09-17 10:21:45,791 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - This job cannot be converted run in-process
+2015-09-17 10:21:45,827 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/pig-0.15.0-core-h1.jar to DistributedCache through /tmp/temp50900424/tmp410334719/pig-0.15.0-core-h1.jar
+2015-09-17 10:21:45,830 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/automaton-1.11-8.jar to DistributedCache through /tmp/temp50900424/tmp-1699022663/automaton-1.11-8.jar
+2015-09-17 10:21:45,832 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/antlr-runtime-3.4.jar to DistributedCache through /tmp/temp50900424/tmp1350118654/antlr-runtime-3.4.jar
+2015-09-17 10:21:45,840 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/guava-11.0.jar to DistributedCache through /tmp/temp50900424/tmp-703714624/guava-11.0.jar
+2015-09-17 10:21:45,844 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/joda-time-2.5.jar to DistributedCache through /tmp/temp50900424/tmp-786566553/joda-time-2.5.jar
+2015-09-17 10:21:45,875 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Setting up single store job
+2015-09-17 10:21:45,884 [main] INFO  org.apache.pig.data.SchemaTupleFrontend - Key [pig.schematuple] is false, will not generate code.
+2015-09-17 10:21:45,884 [main] INFO  org.apache.pig.data.SchemaTupleFrontend - Starting process to move generated code to distributed cacche
+2015-09-17 10:21:45,884 [main] INFO  org.apache.pig.data.SchemaTupleFrontend - Setting key [pig.schematuple.classes] with classes to deserialize []
+2015-09-17 10:21:45,965 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 1 map-reduce job(s) waiting for submission.
+2015-09-17 10:21:46,036 [JobControl] WARN  org.apache.hadoop.mapred.JobClient - No job jar file set.  User classes may not be found. See JobConf(Class) or JobConf#setJar(String).
+2015-09-17 10:21:46,072 [JobControl] INFO  org.apache.hadoop.mapreduce.lib.input.FileInputFormat - Total input paths to process : 1
+2015-09-17 10:21:46,072 [JobControl] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+2015-09-17 10:21:46,080 [JobControl] WARN  org.apache.hadoop.io.compress.snappy.LoadSnappy - Snappy native library not loaded
+2015-09-17 10:21:46,082 [JobControl] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths (combined) to process : 1
+2015-09-17 10:21:46,195 [JobControl] WARN  org.apache.hadoop.mapred.LocalJobRunner - LocalJobRunner does not support symlinking into current working dir.
+2015-09-17 10:21:46,287 [Thread-19] INFO  org.apache.hadoop.util.ProcessTree - setsid exited with exit code 0
+2015-09-17 10:21:46,293 [Thread-19] INFO  org.apache.hadoop.mapred.Task -  Using ResourceCalculatorPlugin : org.apache.hadoop.util.LinuxResourceCalculatorPlugin@15438a32
+2015-09-17 10:21:46,312 [Thread-19] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigRecordReader - Current split being processed file:/tmp/pig-0.15.0/SalesJan2009_final.csv:0+98832
+2015-09-17 10:21:46,327 [Thread-19] INFO  org.apache.hadoop.mapred.MapTask - io.sort.mb = 100
+2015-09-17 10:21:46,466 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - HadoopJobId: job_local_0001
+2015-09-17 10:21:46,466 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Processing aliases grupa,summed,wejscie
+2015-09-17 10:21:46,466 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - detailed locations: M: wejscie[1,10],wejscie[-1,-1],summed[14,9],grupa[13,8] C: summed[14,9],grupa[13,8] R: summed[14,9]
+2015-09-17 10:21:46,513 [Thread-19] INFO  org.apache.hadoop.mapred.MapTask - data buffer = 79691776/99614720
+2015-09-17 10:21:46,513 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 0% complete
+2015-09-17 10:21:46,513 [Thread-19] INFO  org.apache.hadoop.mapred.MapTask - record buffer = 262144/327680
+2015-09-17 10:21:46,513 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Running jobs are [job_local_0001]
+2015-09-17 10:21:46,523 [Thread-19] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2015-09-17 10:21:46,554 [Thread-19] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigGenericMapReduce$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10],wejscie[-1,-1],summed[14,9],grupa[13,8] C: summed[14,9],grupa[13,8] R: summed[14,9]
+2015-09-17 10:21:46,702 [Thread-19] INFO  org.apache.hadoop.mapred.MapTask - Starting flush of map output
+2015-09-17 10:21:46,730 [Thread-19] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigCombiner$Combine - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10],wejscie[-1,-1],summed[14,9],grupa[13,8] C: summed[14,9],grupa[13,8] R: summed[14,9]
+2015-09-17 10:21:46,763 [Thread-19] INFO  org.apache.hadoop.mapred.MapTask - Finished spill 0
+2015-09-17 10:21:46,770 [Thread-19] INFO  org.apache.hadoop.mapred.Task - Task:attempt_local_0001_m_000000_0 is done. And is in the process of commiting
+2015-09-17 10:21:49,271 [Thread-19] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:21:49,272 [Thread-19] INFO  org.apache.hadoop.mapred.Task - Task 'attempt_local_0001_m_000000_0' done.
+2015-09-17 10:21:49,283 [Thread-19] INFO  org.apache.hadoop.mapred.Task -  Using ResourceCalculatorPlugin : org.apache.hadoop.util.LinuxResourceCalculatorPlugin@75e08004
+2015-09-17 10:21:49,283 [Thread-19] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:21:49,290 [Thread-19] INFO  org.apache.hadoop.mapred.Merger - Merging 1 sorted segments
+2015-09-17 10:21:49,297 [Thread-19] INFO  org.apache.hadoop.mapred.Merger - Down to the last merge-pass, with 1 segments left of total size: 82 bytes
+2015-09-17 10:21:49,297 [Thread-19] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:21:49,311 [Thread-19] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:21:49,325 [Thread-19] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapReduce$Reduce - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10],wejscie[-1,-1],summed[14,9],grupa[13,8] C: summed[14,9],grupa[13,8] R: summed[14,9]
+2015-09-17 10:21:49,328 [Thread-19] INFO  org.apache.hadoop.mapred.Task - Task:attempt_local_0001_r_000000_0 is done. And is in the process of commiting
+2015-09-17 10:21:49,329 [Thread-19] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:21:49,329 [Thread-19] INFO  org.apache.hadoop.mapred.Task - Task attempt_local_0001_r_000000_0 is allowed to commit now
+2015-09-17 10:21:49,331 [Thread-19] INFO  org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter - Saved output of task 'attempt_local_0001_r_000000_0' to file:/tmp/temp50900424/tmp1904882196
+2015-09-17 10:21:49,515 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 50% complete
+2015-09-17 10:21:49,515 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Running jobs are [job_local_0001]
+2015-09-17 10:21:52,278 [Thread-19] INFO  org.apache.hadoop.mapred.LocalJobRunner - reduce &gt; reduce
+2015-09-17 10:21:52,279 [Thread-19] INFO  org.apache.hadoop.mapred.Task - Task 'attempt_local_0001_r_000000_0' done.
+2015-09-17 10:21:52,517 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Running jobs are [job_local_0001]
+2015-09-17 10:21:56,525 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 100% complete
+2015-09-17 10:21:56,527 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.SimplePigStats - Script Statistics:
+
+HadoopVersion	PigVersion	UserId	StartedAt	FinishedAt	Features
+1.0.4	0.15.0	root	2015-09-17 10:21:45	2015-09-17 10:21:56	GROUP_BY
+
+Success!
+
+Job Stats (time in seconds):
+JobId	Maps	Reduces	MaxMapTime	MinMapTime	AvgMapTime	MedianMapTime	MaxReduceTime	MinReduceTime	AvgReduceTime	MedianReducetime	Alias	Feature	Outputs
+job_local_0001	1	1	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	grupa,summed,wejscie	GROUP_BY,COMBINER	file:/tmp/temp50900424/tmp1904882196,
+
+Input(s):
+Successfully read 997 records from: "file:///tmp/pig-0.15.0/SalesJan2009_final.csv"
+
+Output(s):
+Successfully stored 4 records in: "file:/tmp/temp50900424/tmp1904882196"
+
+Counters:
+Total records written : 4
+Total bytes written : 0
+Spillable Memory Manager spill count : 0
+Total bags proactively spilled: 0
+Total records proactively spilled: 0
+
+Job DAG:
+job_local_0001
+
+
+2015-09-17 10:21:56,528 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Success!
+2015-09-17 10:21:56,530 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:21:56,531 [main] INFO  org.apache.hadoop.mapreduce.lib.input.FileInputFormat - Total input paths to process : 1
+2015-09-17 10:21:56,532 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+(Amex,188900)
+(Visa,836350)
+(Diners,133800)
+(Mastercard,458450)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Average sales per state in USA?</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; stany = FILTER wejscie BY ccode == 'US';
+grunt&gt; grupa = GROUP stany BY state;
+grunt&gt; srednia = FOREACH grupa GENERATE group as stan, AVG(stany.price) as avarage__price;
+grunt&gt; dump srednia;
+2015-09-17 10:26:14,969 [main] INFO  org.apache.pig.tools.pigstats.ScriptState - Pig features used in the script: GROUP_BY,FILTER
+2015-09-17 10:26:14,983 [main] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2015-09-17 10:26:14,984 [main] INFO  org.apache.pig.newplan.logical.optimizer.LogicalPlanOptimizer - {RULES_ENABLED=[AddForEach, ColumnMapKeyPrune, ConstantCalculator, GroupByConstParallelSetter, LimitOptimizer, LoadTypeCastInserter, MergeFilter, MergeForEach, PartitionFilterOptimizer, PredicatePushdownOptimizer, PushDownForEachFlatten, PushUpFilter, SplitFilter, StreamTypeCastInserter]}
+2015-09-17 10:26:14,990 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2015-09-17 10:26:14,991 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.CombinerOptimizerUtil - Choosing to move algebraic foreach to combiner
+2015-09-17 10:26:14,994 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2015-09-17 10:26:14,994 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+2015-09-17 10:26:15,006 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.MRScriptState - Pig script settings are added to the job
+2015-09-17 10:26:15,008 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - mapred.job.reduce.markreset.buffer.percent is not set, set to default 0.3
+2015-09-17 10:26:15,008 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Reduce phase detected, estimating # of required reducers.
+2015-09-17 10:26:15,008 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Using reducer estimator: org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.InputSizeReducerEstimator
+2015-09-17 10:26:15,009 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.InputSizeReducerEstimator - BytesPerReducer=1000000000 maxReducers=999 totalInputFileSize=98832
+2015-09-17 10:26:15,009 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Setting Parallelism to 1
+2015-09-17 10:26:15,009 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - This job cannot be converted run in-process
+2015-09-17 10:26:15,030 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/pig-0.15.0-core-h1.jar to DistributedCache through /tmp/temp50900424/tmp2062185054/pig-0.15.0-core-h1.jar
+2015-09-17 10:26:15,032 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/automaton-1.11-8.jar to DistributedCache through /tmp/temp50900424/tmp-1866294914/automaton-1.11-8.jar
+2015-09-17 10:26:15,034 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/antlr-runtime-3.4.jar to DistributedCache through /tmp/temp50900424/tmp-1371609951/antlr-runtime-3.4.jar
+2015-09-17 10:26:15,042 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/guava-11.0.jar to DistributedCache through /tmp/temp50900424/tmp-1977007518/guava-11.0.jar
+2015-09-17 10:26:15,046 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Added jar file:/tmp/pig-0.15.0/lib/joda-time-2.5.jar to DistributedCache through /tmp/temp50900424/tmp1684606739/joda-time-2.5.jar
+2015-09-17 10:26:15,051 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.JobControlCompiler - Setting up single store job
+2015-09-17 10:26:15,052 [main] INFO  org.apache.pig.data.SchemaTupleFrontend - Key [pig.schematuple] is false, will not generate code.
+2015-09-17 10:26:15,052 [main] INFO  org.apache.pig.data.SchemaTupleFrontend - Starting process to move generated code to distributed cacche
+2015-09-17 10:26:15,052 [main] INFO  org.apache.pig.data.SchemaTupleFrontend - Setting key [pig.schematuple.classes] with classes to deserialize []
+2015-09-17 10:26:15,083 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 1 map-reduce job(s) waiting for submission.
+2015-09-17 10:26:15,150 [JobControl] WARN  org.apache.hadoop.mapred.JobClient - No job jar file set.  User classes may not be found. See JobConf(Class) or JobConf#setJar(String).
+2015-09-17 10:26:15,166 [JobControl] INFO  org.apache.hadoop.mapreduce.lib.input.FileInputFormat - Total input paths to process : 1
+2015-09-17 10:26:15,166 [JobControl] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+2015-09-17 10:26:15,166 [JobControl] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths (combined) to process : 1
+2015-09-17 10:26:15,181 [JobControl] WARN  org.apache.hadoop.mapred.LocalJobRunner - LocalJobRunner does not support symlinking into current working dir.
+2015-09-17 10:26:15,233 [Thread-40] INFO  org.apache.hadoop.mapred.Task -  Using ResourceCalculatorPlugin : org.apache.hadoop.util.LinuxResourceCalculatorPlugin@1de3cd0e
+2015-09-17 10:26:15,241 [Thread-40] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigRecordReader - Current split being processed file:/tmp/pig-0.15.0/SalesJan2009_final.csv:0+98832
+2015-09-17 10:26:15,242 [Thread-40] INFO  org.apache.hadoop.mapred.MapTask - io.sort.mb = 100
+2015-09-17 10:26:15,279 [Thread-40] INFO  org.apache.hadoop.mapred.MapTask - data buffer = 79691776/99614720
+2015-09-17 10:26:15,279 [Thread-40] INFO  org.apache.hadoop.mapred.MapTask - record buffer = 262144/327680
+2015-09-17 10:26:15,286 [Thread-40] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2015-09-17 10:26:15,303 [Thread-40] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigGenericMapReduce$Map - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10],wejscie[-1,-1],stany[15,8],srednia[17,10],grupa[16,8] C: srednia[17,10],grupa[16,8] R: srednia[17,10]
+2015-09-17 10:26:15,377 [Thread-40] INFO  org.apache.hadoop.mapred.MapTask - Starting flush of map output
+2015-09-17 10:26:15,398 [Thread-40] INFO  org.apache.hadoop.mapred.MapTask - Finished spill 0
+2015-09-17 10:26:15,399 [Thread-40] INFO  org.apache.hadoop.mapred.Task - Task:attempt_local_0002_m_000000_0 is done. And is in the process of commiting
+2015-09-17 10:26:15,585 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - HadoopJobId: job_local_0002
+2015-09-17 10:26:15,585 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Processing aliases grupa,srednia,stany,wejscie
+2015-09-17 10:26:15,585 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - detailed locations: M: wejscie[1,10],wejscie[-1,-1],stany[15,8],srednia[17,10],grupa[16,8] C: srednia[17,10],grupa[16,8] R: srednia[17,10]
+2015-09-17 10:26:15,587 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 0% complete
+2015-09-17 10:26:15,587 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Running jobs are [job_local_0002]
+2015-09-17 10:26:18,225 [Thread-40] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:26:18,226 [Thread-40] INFO  org.apache.hadoop.mapred.Task - Task 'attempt_local_0002_m_000000_0' done.
+2015-09-17 10:26:18,230 [Thread-40] INFO  org.apache.hadoop.mapred.Task -  Using ResourceCalculatorPlugin : org.apache.hadoop.util.LinuxResourceCalculatorPlugin@253c5833
+2015-09-17 10:26:18,230 [Thread-40] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:26:18,231 [Thread-40] INFO  org.apache.hadoop.mapred.Merger - Merging 1 sorted segments
+2015-09-17 10:26:18,231 [Thread-40] INFO  org.apache.hadoop.mapred.Merger - Down to the last merge-pass, with 1 segments left of total size: 819 bytes
+2015-09-17 10:26:18,231 [Thread-40] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:26:18,238 [Thread-40] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:26:18,243 [Thread-40] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigMapReduce$Reduce - Aliases being processed per job phase (AliasName[line,offset]): M: wejscie[1,10],wejscie[-1,-1],stany[15,8],srednia[17,10],grupa[16,8] C: srednia[17,10],grupa[16,8] R: srednia[17,10]
+2015-09-17 10:26:18,249 [Thread-40] INFO  org.apache.hadoop.mapred.Task - Task:attempt_local_0002_r_000000_0 is done. And is in the process of commiting
+2015-09-17 10:26:18,250 [Thread-40] INFO  org.apache.hadoop.mapred.LocalJobRunner -
+2015-09-17 10:26:18,250 [Thread-40] INFO  org.apache.hadoop.mapred.Task - Task attempt_local_0002_r_000000_0 is allowed to commit now
+2015-09-17 10:26:18,252 [Thread-40] INFO  org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter - Saved output of task 'attempt_local_0002_r_000000_0' to file:/tmp/temp50900424/tmp-1531032795
+2015-09-17 10:26:18,589 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 50% complete
+2015-09-17 10:26:18,589 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Running jobs are [job_local_0002]
+2015-09-17 10:26:21,228 [Thread-40] INFO  org.apache.hadoop.mapred.LocalJobRunner - reduce &gt; reduce
+2015-09-17 10:26:21,228 [Thread-40] INFO  org.apache.hadoop.mapred.Task - Task 'attempt_local_0002_r_000000_0' done.
+2015-09-17 10:26:21,591 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Running jobs are [job_local_0002]
+2015-09-17 10:26:25,595 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - 100% complete
+2015-09-17 10:26:25,595 [main] INFO  org.apache.pig.tools.pigstats.mapreduce.SimplePigStats - Script Statistics:
+
+HadoopVersion	PigVersion	UserId	StartedAt	FinishedAt	Features
+1.0.4	0.15.0	root	2015-09-17 10:26:15	2015-09-17 10:26:25	GROUP_BY,FILTER
+
+Success!
+
+Job Stats (time in seconds):
+JobId	Maps	Reduces	MaxMapTime	MinMapTime	AvgMapTime	MedianMapTime	MaxReduceTime	MinReduceTime	AvgReduceTime	MedianReducetime	Alias	Feature	Outputs
+job_local_0002	1	1	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	grupa,srednia,stany,wejscie	GROUP_BY,COMBINER	file:/tmp/temp50900424/tmp-1531032795,
+
+Input(s):
+Successfully read 997 records from: "file:///tmp/pig-0.15.0/SalesJan2009_final.csv"
+
+Output(s):
+Successfully stored 50 records in: "file:/tmp/temp50900424/tmp-1531032795"
+
+Counters:
+Total records written : 50
+Total bytes written : 0
+Spillable Memory Manager spill count : 0
+Total bags proactively spilled: 0
+Total records proactively spilled: 0
+
+Job DAG:
+job_local_0002
+
+
+2015-09-17 10:26:25,596 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Success!
+2015-09-17 10:26:25,596 [main] WARN  org.apache.pig.data.SchemaTupleBackend - SchemaTupleBackend has already been initialized
+2015-09-17 10:26:25,597 [main] INFO  org.apache.hadoop.mapreduce.lib.input.FileInputFormat - Total input paths to process : 1
+2015-09-17 10:26:25,597 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+(AK,1680.0)
+(AL,3600.0)
+(AR,3300.0)
+(AZ,1685.0)
+(CA,1717.4242424242425)
+(CO,1440.0)
+(CT,1200.0)
+(DC,2000.0)
+(DE,1200.0)
+(FL,1779.3103448275863)
+(GA,1342.857142857143)
+(HI,1466.6666666666667)
+(IA,1200.0)
+(ID,1200.0)
+(IL,1500.0)
+(IN,2400.0)
+(KS,2400.0)
+(KY,1200.0)
+(LA,4350.0)
+(MA,1384.6153846153845)
+(MD,1520.0)
+(ME,1200.0)
+(MI,1418.1818181818182)
+(MN,1920.0)
+(MO,1200.0)
+(MS,5550.0)
+(MT,1200.0)
+(NC,1200.0)
+(NE,1200.0)
+(NH,1200.0)
+(NJ,1200.0)
+(NM,1200.0)
+(NV,1200.0)
+(NY,1492.6829268292684)
+(OH,1200.0)
+(OR,1200.0)
+(PA,1854.5454545454545)
+(RI,1200.0)
+(SC,1800.0)
+(TN,1772.7272727272727)
+(TX,1500.0)
+(UT,2460.0)
+(VA,1346.6666666666667)
+(VI,3600.0)
+(VT,3600.0)
+(WA,1714.2857142857142)
+(WI,1200.0)
+(Georgia,1200.0)
+(Michigan,1200.0)
+(Virginia,1200.0)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hive_2">Hive</h3>
+<div class="paragraph">
+<p>Let&#8217;s load same data as previously, examine it and run Hive:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  $ hadoop dfs -cp /tmp/SalesJan2009_final.csv SalesJan2009_final.csv
+  $ hadoop dfs -tail SalesJan2009_final.csv
+  $ hive</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Hive uses query language and requires a DB and tables. So:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  hive&gt; CREATE DATABASE db;
+  hive&gt; CREATE TABLE db.sales(
+    &gt; transdate STRING,
+    &gt; product STRING,
+    &gt; price INT,
+    &gt; paymenttype STRING,
+    &gt; name STRING,
+    &gt; city STRING,
+    &gt; state STRING,
+    &gt; ccode STRING,
+    &gt; country STRING,
+    &gt; latitude DOUBLE,
+    &gt; longitude DOUBLE)
+    &gt; ROW FORMAT DELIMITED
+    &gt; FIELDS TERMINATED BY '\;'
+    &gt; STORED AS TEXTFILE;
+  hive&gt; LOAD DATA INPATH '/tmp/SalesJan2009_final.csv' INTO TABLE db.sales;
+Loading data to table db.sales
+Table db.sales stats: [numFiles=1, totalSize=98832]
+OK
+Time taken: 0.247 seconds</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So, we have data loaded. How easy it is to do usualy Hello Big Data World example? That is, count? VERY MUCH SO.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  hive&gt; SELECT product, COUNT(*) as cnt from db.sales group by product;
+Query ID = root_20150917110022_76c3d765-6d39-4842-b833-ba093d162689
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=&lt;number&gt;
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=&lt;number&gt;
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=&lt;number&gt;
+Job running in-process (local Hadoop)
+2015-09-17 11:00:24,770 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_local166006063_0001
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Product1	846
+Product2	136
+Product3	15
+Time taken: 2.216 seconds, Fetched: 3 row(s)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>How many products were sold, ordered descendingly?</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>hive&gt; insert overwrite directory 'raport_sprzedazy_per_karta' select paymenttype, sum(price) as sprzedaz from db.sales group by paymenttype order by sprzedaz desc limit 3;
+Query ID = root_20150917122116_fbb0c6d3-6492-4b40-ac3e-9e78ca6c2a29
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=&lt;number&gt;
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=&lt;number&gt;
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=&lt;number&gt;
+Job running in-process (local Hadoop)
+2015-09-17 12:21:17,723 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_local1810381477_0002
+Launching Job 2 out of 2
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=&lt;number&gt;
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=&lt;number&gt;
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=&lt;number&gt;
+Job running in-process (local Hadoop)
+2015-09-17 12:21:18,922 Stage-2 map = 100%,  reduce = 100%
+Ended Job = job_local1806630773_0003
+Moving data to: raport_sprzedazy_per_karta
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Stage-Stage-2:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 2.608 seconds</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>And finally, average sales per state in USA, written to a table.</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>hive&gt; create table stany_sprzedaz (state STRING, avg_sales DOUBLE);
+OK
+Time taken: 0.051 seconds
+hive&gt; insert overwrite table stany_sprzedaz select state, avg(price) as avg_sales from db.sales where ccode='US'  group by state order by avg_sales ASC;
+Query ID = root_20150917122602_8c7f8765-355b-4d69-8454-882739a1f4ed
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=&lt;number&gt;
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=&lt;number&gt;
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=&lt;number&gt;
+Job running in-process (local Hadoop)
+2015-09-17 12:26:03,844 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_local841262595_0004
+Launching Job 2 out of 2
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=&lt;number&gt;
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=&lt;number&gt;
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=&lt;number&gt;
+Job running in-process (local Hadoop)
+2015-09-17 12:26:05,016 Stage-2 map = 100%,  reduce = 100%
+Ended Job = job_local1719316609_0005
+Loading data to table default.stany_sprzedaz
+Table default.stany_sprzedaz stats: [numFiles=1, numRows=50, totalSize=648, rawDataSize=598]
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Stage-Stage-2:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 2.696 seconds
+hive&gt; select * from stany_sprzedaz;
+OK
+KY	1200.0
+Virginia	1200.0
+CT	1200.0
+DE	1200.0
+Georgia	1200.0
+RI	1200.0
+[...]</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comparison_of_commands">Comparison of commands</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s cut on logs a bit. It&#8217;s not easy, and in debug it&#8217;s not recommended, but here we want to compare. Now&#8230;</p>
+</div>
+<div class="sect2">
+<h3 id="_hadoop_2">Hadoop</h3>
+<div id="app-listing" class="listingblock">
+<div class="title">Raw Hadoop Map Reduce "hello world" example: word count</div>
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">root@test1:/tmp/hadoop-2.7.1# bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar grep input output 'dfs[a-z.]+'
+root@test1:/tmp/hadoop-2.7.1# cat output/*
+1	dfsadmin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We searched for <em>dfs</em> followed by letters (in lower case) and we found 1 instance: <em>dfsadmin</em> word. We used ready example so no data loading was required. For these commands we see entire MR logging, three screens.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pig_2">Pig</h3>
+<div id="app-listing" class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">  $ wget https://www.dropbox.com/s/c4qkctgdxvq41fe/SalesJan2009_final.csv
+  $ mv SalesJan2009_final.csv /tmp
+  $ pig
+  &gt; grunt cp /tmp/SalesJan2009_final.csv SalesJan2009_final.csv
+wejscie = LOAD 'SalesJan2009_final.csv' using PigStorage(';')
+AS (transdate:chararray,
+product:chararray,
+price:long,
+paymenttype:chararray,
+name:chararray,
+city:chararray,
+state:chararray,
+ccode:chararray,
+country:chararray,
+latitude:double,
+longitude:double);
+grunt&gt; describe wejscie;
+grunt&gt; illustrate wejscie;
+grunt&gt; zgrupowane = GROUP wejscie by product;
+grunt&gt; agregat = FOREACH zgrupowane GENERATE group as product, COUNT(wejscie) as liczba;
+grunt&gt; agregat_sort = ORDER agregat by liczba ASC;
+grunt&gt; DUMP agregat_sort;
+grunt&gt; STORE agregat_sort INTO 'sumaryczna_sprzedaz';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So, count took: loading data, grouping by column, aggregating (counting), sorting and presenting (via <code>DUMP</code> or <code>STORE</code>). And tremendous amount of logs.</p>
+</div>
+<div class="paragraph">
+<p><strong>Which cards are used to pay and how often?</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; grupa = GROUP wejscie BY paymenttype;
+grunt&gt; summed = FOREACH grupa GENERATE group as payment, SUM(wejscie.price) as summed_prices;
+grunt&gt; dump summed;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Average sales per state in USA?</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grunt&gt; stany = FILTER wejscie BY ccode == 'US';
+grunt&gt; grupa = GROUP stany BY state;
+grunt&gt; srednia = FOREACH grupa GENERATE group as stan, AVG(stany.price) as avarage__price;
+grunt&gt; dump srednia;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hive_3">Hive</h3>
+<div class="paragraph">
+<p>Data loading:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  $ hadoop dfs -cp /tmp/SalesJan2009_final.csv SalesJan2009_final.csv
+  $ hadoop dfs -tail SalesJan2009_final.csv
+  $ hive</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Additional step: structure preparation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  hive&gt; CREATE DATABASE db;
+  hive&gt; CREATE TABLE db.sales(
+    &gt; transdate STRING,
+    &gt; product STRING,
+    &gt; price INT,
+    &gt; paymenttype STRING,
+    &gt; name STRING,
+    &gt; city STRING,
+    &gt; state STRING,
+    &gt; ccode STRING,
+    &gt; country STRING,
+    &gt; latitude DOUBLE,
+    &gt; longitude DOUBLE)
+    &gt; ROW FORMAT DELIMITED
+    &gt; FIELDS TERMINATED BY '\;'
+    &gt; STORED AS TEXTFILE;
+  hive&gt; LOAD DATA INPATH '/tmp/SalesJan2009_final.csv' INTO TABLE db.sales;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Count:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  hive&gt; SELECT product, COUNT(*) as cnt from db.sales group by product;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>How many products were sold, ordered descendingly?</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>hive&gt; insert overwrite directory 'raport_sprzedazy_per_karta' select paymenttype, sum(price) as sprzedaz from db.sales group by paymenttype order by sprzedaz desc limit 3;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>And finally, average sales per state in USA, written to a table.</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>hive&gt; create table stany_sprzedaz (state STRING, avg_sales DOUBLE);
+hive&gt; select * from stany_sprzedaz;</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usability_comparison">Usability comparison</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we can see, Hive commands are easiest to follow. They also produce least amount of clatter. Still, they require thinking in terms of relational data. Which is fine sometimes, but requires additional overhead when CREATING necessary structure for data.</p>
+</div>
+<div class="paragraph">
+<p>Pig commands are less unwieldy than Hadoop ones, but the amount of logs is terrible. It&#8217;s even more terrible when one tries to switch logs of. Aside from changing Hadoop&#8217;s logging settings via <code>log4j</code> configuration, there&#8217;s very little one can do and none of it is intuitive.</p>
+</div>
+<div class="paragraph">
+<p>Still, writing a shell script with mixture of Bash/Perl/Python and Pig Latin is more than fine and Pig eliminates the need to create databases, tables and other such things - you work on variables there.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-important" title="Important"></i>
+</td>
+<td class="content">
+In both cases, MR jobs produce number of log statements that are of no interests to data crunchers. This makes it worthwhile to say: prototype on small datasets.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Pig and Hive are independent tools that cover quite similar areas.</p>
+</div>
+<div class="paragraph">
+<p>Both:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>work on Hadoop platform.</p>
+</li>
+<li>
+<p>are written in Java.</p>
+</li>
+<li>
+<p>came from large companies with same aim: simplify Map/Reduce jobs..</p>
+</li>
+<li>
+<p>are better at handling M/R jobs.</p>
+</li>
+<li>
+<p>introduce their own language for it.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Hive uses a Query Language, similar to SQL, HiveQL. Reason being it&#8217;s target group: data analysts. Hive works well with relational, structured data.<br>
+Pig uses PigLatin, ETL language that can be easily blended in Perl or Python, since it targest ETL developers. Pig works well with data without structure, in scripts.</p>
+</div>
+<div class="paragraph">
+<p>Overall, while either could be used, it&#8217;s best to have both at one&#8217;s disposal. Especially since there are tasks that will be easier to deal with if both are used (load data with Pig, analyze it with Hive). This viewpoint is shared by those more experienced than myself, whom I managed to contact.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Introduction to Pig and Hive along with simple comparison of both.</div>
+<div class="paragraph">
+<p>Closing this work, I&#8217;d like to point out that:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>I showed how to setup Pig and Hive on Hadoop, within LXC container (which allows fast cluster setup on local machine).</p>
+</li>
+<li>
+<p>I showed similarities of both tools, their place in Hadoop ecosystem and how to use them.</p>
+</li>
+<li>
+<p>I believe it&#8217;s rather clear that <em>pure</em> Hadoop MR jobs are quite tedious and unwieldy, requiring lot of typing and ready, jar packaged Java programs.</p>
+</li>
+<li>
+<p>PigLatin is a data-flow language, focusing on file operations</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Pig shell, Grunt, offers basic Unix commands, like <code>ls</code>, or <code>cat</code>,</p>
+</li>
+<li>
+<p>it also <code>LOADS</code> data from files and <code>STORES INTO</code> files results of MR jobs</p>
+</li>
+<li>
+<p>working with Pig does not require Java knowledge</p>
+</li>
+<li>
+<p>joins, filters and grouping is all possible, though requires some modicum of knowledge, I needed to read a simple Pig tutorial from Cloudera (linked below)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>HiveQL is a pleasant language and natural for those who worked with SQL before</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>it means additional setup step to load data into newly created tables and databases</p>
+</li>
+<li>
+<p>it uses directories as databases and files as data, nicely exploiting HDFS</p>
+</li>
+<li>
+<p>no Java knowledge required</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Hive is better for data analysis, Pig for ETL. Knowing SQL means knowing much of HiveQL, Pig Latin requires some learning. Structured data as of now are better in Hive (not big difference however) while unstructured: in Pig.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-important" title="Important"></i>
+</td>
+<td class="content">
+The more advanced usages however tend to show that using both is quite smart and allows to choose between more ways to achieve same purposes.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Sadly, performance aspect of the comparison, as requiring much more work (and stricter) was left out from this work. All work was done on single-node cluster.
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Project</dt>
+<dd>
+<p>Methods and Systems of Great-Scale Computation (Polish: Metody i Systemy Obliczeń Wielkiej Skali, MISOWS)</p>
+</dd>
+<dt class="hdlist1">Lead by</dt>
+<dd>
+<p><a href="http://www.icsr.agh.edu.pl/~malawski/">dr Maciej Malawski</a></p>
+</dd>
+<dt class="hdlist1">Author</dt>
+<dd>
+<p><a href="mailto:Tomasz.Borek@gmail.com">Tomasz.Borek@gmail.com</a>, <a href="https://twitter.com/LAFK_pl/">@LAFK_pl</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_more">More?</h3>
+<div class="paragraph">
+<p>For those not yet satisfied, I can offer two things. Firstly, this work can be improved. Secondly, please peruse my sources at your leisure.</p>
+</div>
+<div class="sect3">
+<h4 id="_improvements">Improvements</h4>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Further work</div>
+<div class="paragraph">
+<p>This work offers no guidance when it comes to performance aspects of the tools. Also, all exercises were done on a single-container cluster. It would certainly be worthwhile if we were to take network and clustering into account. Though I heard nothing that would indicate real-life usages within clusters, through network of an sort would put either Hive or Pig at an advantage. My suggestions for improvement would be:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>load testing of both tools to see when they crack</p>
+</li>
+<li>
+<p>testing Hive on unstructured data</p>
+</li>
+<li>
+<p>testing Pig on data with structure</p>
+</li>
+<li>
+<p>seeing how both integrate with other tools (there are indicators Pig would be better but I have no data for proving this)</p>
+</li>
+<li>
+<p>performance behaviours of both under similar scenarios - just this would be worthy of a separate project due to number of possible combinations: cluster setup, tools opeerational modes, compilers, and Java / tool versions.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bibliography">Bibliography</h4>
+<div class="paragraph">
+<p>Completely virtual.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Links for further reading</div>
+<div class="paragraph">
+<p>This work in no way exhausts the subject. For more, please consult:</p>
+</div>
+<div class="paragraph">
+<p><strong>Map Reduce</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://horicky.blogspot.com/2010/08/designing-algorithmis-for-map-reduce.html">Designing algorithms for MR jobs</a></p>
+</li>
+<li>
+<p><a href="http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html">Hadoop MR tutorial</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/MapReduce">Wikipedia on MR</a></p>
+</li>
+<li>
+<p><a href="http://www.tutorialspoint.com/hadoop/hadoop_mapreduce.htm">TutorialsPoint guide on Hadoop MR</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Hadoop as a platform</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/RackAwareness.html">Hadoop Rack Awareness</a> - important cluster topic</p>
+</li>
+<li>
+<p><a href="http://bradhedlund.com/2011/09/10/understanding-hadoop-clusters-and-the-network/"><strong>Best</strong> article I found on Hadoop clusters</a></p>
+</li>
+<li>
+<p><a href="http://www.dezyre.com/article/difference-between-pig-and-hive-the-two-key-components-of-hadoop-ecosystem/79">Pig and Hive differences and Hadoop ecosystem diagram</a></p>
+</li>
+<li>
+<p><a href="http://www.thecloudavenue.com/2012/12/introduction-to-apache-hive-and-pig.html">Ecosystem diagram</a></p>
+</li>
+<li>
+<p><a href="http://blog.cloudera.com/blog/2010/11/tackling-large-scale-data-in-government/">How large scale data was tackled in governmental project</a></p>
+</li>
+<li>
+<p><a href="http://cloud-computation.blogspot.com/2011/07/bigdata-how-data-distributed-in-hadoop.html">Really short primer on HDFS in Hadoop</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Comparison</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://www.larsgeorge.com/2009/10/hive-vs-pig.html">http://www.larsgeorge.com/2009/10/hive-vs-pig.html</a> - short blog post</p>
+</li>
+<li>
+<p><a href="http://www.hadoopwizard.com/when-to-use-pig-latin-versus-hive-sql/">http://www.hadoopwizard.com/when-to-use-pig-latin-versus-hive-sql/</a> - <code>group</code>, <code>flatten</code>  + greatest cluster link</p>
+</li>
+<li>
+<p><a href="http://stackoverflow.com/questions/3356259/difference-between-pig-and-hive-why-have-both">SO question on why both are good to have</a></p>
+</li>
+<li>
+<p><a href="https://developer.yahoo.com/blogs/hadoop/comparing-pig-latin-sql-constructing-data-processing-pipelines-444.html">Yahoo architect compares Pig and Hive</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Setup links</strong><br>
+. <a href="https://www.youtube.com/watch?v=2nf3V5scqt0&amp;index=2&amp;list=PLpPs1Hz0EWysbXFQ10hiAH-CJCc5dMH_Y">Video tutorials</a><br>
+. <a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation">One node cluster setup</a><br>
+. <a href="https://pig.apache.org/docs/r0.7.0/setup.html">Pig setup</a><br>
+. <a href="http://pig.apache.org/docs/r0.14.0/start.html">Pig Getting Started</a><br>
+. <a href="https://cwiki.apache.org/confluence/display/Hive/AdminManual+Installation">Hive installation</a><br>
+. <a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted#GettingStarted-Requirements">Good starting point for Hive</a></p>
+</div>
+<div class="paragraph">
+<p><strong>Excercises</strong><br>
+. <a href="http://www.slideshare.net/sagespl/codepot-pig-i-hive-szybkie-wprowadzenie-pig-and-hive-crash-course">Pig and Hive crash course in Polish</a><br>
+. <a href="https://www.notehub.org/2015/8/29/warsztat---hive">Easy Hive workshop</a><br>
+. <a href="https://www.notehub.org/2015/8/29/demo-prowadzącego---pig">Easy Pig workshop</a><br>
+. <a href="https://www.notehub.org/2015/8/29/pig---ładowanie-danych-hive---analiza">More difficult workshop for both at the same time</a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.2<br>
+Last updated 2015-09-17 13:11:25 CEST
+</div>
+</div>
+</body>
+</html>
